@@ -1,9 +1,7 @@
 <?php
 
-/**
- * --------------------------------------------------------------------------
- * Description
- * --------------------------------------------------------------------------
- *
- * @author Nam Hoang Luu <nam@mbearvn.com>
- */
+return [
+    'app_id'           => env('FACEBOOK_APP_ID'),
+    'app_secret'       => env('FACEBOOK_APP_SECRET'),
+    'app_redirect_url' => env('FACEBOOK_REDIRECT_URL'),
+];
