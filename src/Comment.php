@@ -11,6 +11,16 @@ namespace Namest\Facebook;
  */
 class Comment extends Object
 {
+    protected $fields = [
+        'id',
+        'from',
+        'message',
+        'created_time',
+        'can_hide',
+        'can_like',
+        'can_remove',
+    ];
+
     /**
      * @return EdgeOut
      */
@@ -86,6 +96,7 @@ class Comment extends Object
             'id',
             'from',
             'message',
+            'created_time',
             'can_remove',
             'can_hide',
             'can_like',
