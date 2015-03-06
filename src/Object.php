@@ -50,6 +50,11 @@ class Object implements ArrayAccess, Arrayable
     protected $label;
 
     /**
+     * @var array
+     */
+    protected $fields = [];
+
+    /**
      * @param array $attributes
      */
     public function __construct($attributes = [])
@@ -136,7 +141,9 @@ class Object implements ArrayAccess, Arrayable
         if ( ! is_string($this->id) || $this->id == '')
             throw new \LogicException("Facebook ID need to be set before fetch information.");
 
-        return $this->getClient()->get($this->id);
+        $parameters = $this->fields ? ['fields' => $this->fields] : [];
+
+        return $this->getClient()->get($this->id, $parameters);
     }
 
     /**
