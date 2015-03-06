@@ -9,7 +9,7 @@ namespace Namest\Facebook;
  * @package Namest\Facebook
  *
  */
-class User extends Object
+class User extends Profile
 {
     /**
      * @return EdgeOut
