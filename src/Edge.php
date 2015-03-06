@@ -170,4 +170,25 @@ class Edge
 
         return $collection ?: $response;
     }
+
+    /**
+     * @param string $fields
+     *
+     * @return mixed
+     */
+    public function publish($fields)
+    {
+        $client = $this->getClient();
+
+        $response = $client->post("{$this->start->id}/{$this->edge}", $fields);
+
+        if (property_exists($response, 'success'))
+            return $response->success;
+
+        if (property_exists($response, 'id'))
+            // TODO Hydrate class
+            return $response->id;
+
+        return $response;
+    }
 }

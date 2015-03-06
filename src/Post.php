@@ -20,6 +20,16 @@ class Post extends Object
     }
 
     /**
+     * @param string $message
+     *
+     * @return string
+     */
+    public function comment($message)
+    {
+        return $this->comments()->publish(['message' => $message]);
+    }
+
+    /**
      * @return array
      */
     public function getFetchCommentsParameters()
