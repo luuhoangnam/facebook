@@ -24,7 +24,10 @@ class Post extends Object
      */
     public function getFetchCommentsParameters()
     {
-        return ['filter' => 'stream'];
+        return [
+            'filter' => 'stream',
+            'limit'  => 100,
+        ];
     }
 
     /**
