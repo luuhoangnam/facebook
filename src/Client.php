@@ -67,11 +67,30 @@ class Client
         if (is_null(static::$token))
             throw new \Exception("Token is not set!");
 
+        $this->session = $this->getSession();
+        $endpoint      = $this->normalizeEndpoint($endpoint);
+        $this->request = new FacebookRequest($this->session, $method, $endpoint, $parameters);
+
+        return $this->send($this->request);
+    }
+
+    /**
+     * @param FacebookRequest $request
+     *
+     * @return array
+     * @throws Exception
+     * @throws FacebookAuthorizationException
+     * @throws FacebookClientException
+     * @throws FacebookOtherException
+     * @throws FacebookPermissionException
+     * @throws FacebookRequestException
+     * @throws FacebookServerException
+     * @throws FacebookThrottleException
+     */
+    public function send(FacebookRequest $request)
+    {
         try {
-            $this->session  = $this->getSession();
-            $endpoint       = $this->normalizeEndpoint($endpoint);
-            $this->request  = new FacebookRequest($this->session, $method, $endpoint, $parameters);
-            $this->response = $this->request->execute();
+            $this->response = $request->execute();
 
             return $this->response->getResponse();
         } catch ( FacebookClientException $e ) {
