@@ -51,6 +51,16 @@ class Comment extends Object
 
     /**
 
+    public function hide()
+    {
+        $this->update(['is_hidden' => true]);
+    }
+
+    public function unhide()
+    {
+        $this->update(['is_hidden' => false]);
+    }
+
     /**
      * @param array $fields
      *
