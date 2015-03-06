@@ -50,6 +50,12 @@ class Comment extends Object
     }
 
     /**
+     * @param string $mesage New message
+     */
+    public function edit($mesage)
+    {
+        $this->update(['message' => $mesage]);
+    }
 
     public function hide()
     {
