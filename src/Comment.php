@@ -88,6 +88,7 @@ class Comment extends Object
             'message',
             'can_remove',
             'can_hide',
+            'can_like',
         ];
     }
 }
