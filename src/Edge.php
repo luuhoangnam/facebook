@@ -162,9 +162,12 @@ class Edge
         if (property_exists($response, 'success'))
             return $response->success;
 
-        if (property_exists($response, 'id'))
-            // TODO Hydrate class
-            return $response->id;
+        if (property_exists($response, 'id')) {
+            $id = $response->id;
+            $this->end->setId($id)->sync();
+
+            return $this->end;
+        }
 
         return $response;
     }
