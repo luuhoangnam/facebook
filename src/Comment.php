@@ -91,4 +91,33 @@ class Comment extends Object
             'can_like',
         ];
     }
+
+    /**
+     * @param mixed $data
+     */
+    public function hydrateFromField($data)
+    {
+        $client      = $this->getClient();
+        $profileType = $client->guestProfileTypeFromData($data);
+
+        switch ($profileType) {
+            case Profile::APPLICATION:
+                $profile = new Application;
+                break;
+            case Profile::GROUP:
+                $profile = new Group;
+                break;
+            case Profile::EVENT:
+                $profile = new Event;
+                break;
+            case Profile::PAGE:
+                $profile = new Page;
+                break;
+            case Profile::USER:
+            default:
+                $profile = new User;
+        }
+
+        $profile = $profile->setId($data->id)->sync();
+    }
 }
