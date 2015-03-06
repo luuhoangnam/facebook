@@ -2,6 +2,10 @@
 
 namespace Namest\Facebook;
 
+use ArrayAccess;
+use Everyman\Neo4j\Client as Neo4jClient;
+use Everyman\Neo4j\Cypher\Query;
+use Everyman\Neo4j\Node;
 use Illuminate\Contracts\Support\Arrayable;
 
 /**
@@ -34,6 +38,16 @@ class Object implements ArrayAccess, Arrayable
      * @var Client
      */
     protected $client;
+
+    /**
+     * @var Node
+     */
+    protected $node;
+
+    /**
+     * @var string
+     */
+    protected $label;
 
     /**
      * @param array $attributes
@@ -84,11 +98,22 @@ class Object implements ArrayAccess, Arrayable
         return $this->attributes[$key];
     }
 
+    /**
+     * @return $this
+     */
     public function get()
     {
-        // TODO Implements get
+        $this->findNode();
+        $properties = $this->node->getProperties();
+
+        $this->fill($properties);
+
+        return $this;
     }
 
+    /**
+     * @return $this
+     */
     public function sync()
     {
         // Fetch
@@ -98,7 +123,9 @@ class Object implements ArrayAccess, Arrayable
         $this->fill($attributes);
 
         // Save
-        // TODO Implements sync
+        $this->save();
+
+        return $this;
     }
 
     /**
@@ -217,8 +244,10 @@ class Object implements ArrayAccess, Arrayable
 
         switch ($direction) {
             case Edge::OUT:
+                /** @noinspection PhpParamsInspection */
                 return new EdgeOut($this, $relation, new $object, $edge);
             case Edge::IN:
+                /** @noinspection PhpParamsInspection */
                 return new EdgeIn($this, $relation, new $object, $edge);
             default:
                 throw new \InvalidArgumentException("Not support direction [{$direction}]");
@@ -231,5 +260,112 @@ class Object implements ArrayAccess, Arrayable
     public function toArray()
     {
         return $this->attributes;
+    }
+
+    /**
+     * @return Node
+     */
+    public function save()
+    {
+        $this->node = $this->findNode();
+        if (is_null($this->node)) {
+            // CREATE
+            return $this->node = $this->createNode();
+        }
+
+        // UPDATE
+        return $this->node = $this->saveNode();
+    }
+
+    /**
+     * @return Node
+     */
+    public function getNode()
+    {
+        return $this->node ?: new Node(new Neo4jClient);
+    }
+
+    /**
+     * @return string
+     */
+    protected function getLabel()
+    {
+        $className = get_class($this);
+
+        $segments = explode('\\', $className);
+
+        $label = array_pop($segments);
+
+        return $this->label ?: $label;
+    }
+
+    /**
+     * @param string $statement
+     *
+     * @return Query
+     */
+    protected function getCypherQuery($statement)
+    {
+        return new Query($this->getNode()->getClient(), $statement);
+    }
+
+    /**
+     * @return Node
+     */
+    public function findNode()
+    {
+        $label       = $this->getLabel();
+        $queryString = "MATCH (node:{$label})
+                        WHERE node.id = \"{$this->id}\"
+                        RETURN node";
+
+        $results = $this->getCypherQuery($queryString)->getResultSet();
+
+        if (count($results) === 0)
+            return null;
+
+        return $results[0]['node'];
+    }
+
+    /**
+     * @param Node $node
+     *
+     * @return Node
+     */
+    protected function createNode($node = null)
+    {
+        $node = $node ?: $this->getNode();
+
+        $this->saveNode($node);
+
+        $this->addLabel($this->getLabel());
+
+        return $node;
+    }
+
+    /**
+     * @param Node $node
+     *
+     * @return Node
+     */
+    protected function saveNode($node = null)
+    {
+        $node = $node ?: $this->getNode();
+
+        $node->setProperties($this->attributes);
+        $node->save();
+
+        return $node;
+    }
+
+    /**
+     * @param string $label
+     */
+    protected function addLabel($label = null)
+    {
+        $label = $label ?: $this->getLabel();
+
+        $label = $this->getNode()->getClient()->makeLabel($label);
+        $this->node->addLabels([$label]);
     }
 }
