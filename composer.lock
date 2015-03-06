@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "d0338d76d53a275011ba9c57e1bcfca5",
+    "hash": "84ac351fb0e5766a37d5864e3866373d",
     "packages": [
         {
             "name": "danielstjules/stringy",
@@ -463,109 +463,6 @@
                 "time"
             ],
             "time": "2015-03-04 04:50:11"
-        },
-        {
-            "name": "vinelab/neo4jphp",
-            "version": "v0.1.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/Vinelab/neo4jphp.git",
-                "reference": "d7ae484bfcdcfec61d24b22b933b4dbc48d60eb0"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/Vinelab/neo4jphp/zipball/d7ae484bfcdcfec61d24b22b933b4dbc48d60eb0",
-                "reference": "d7ae484bfcdcfec61d24b22b933b4dbc48d60eb0",
-                "shasum": ""
-            },
-            "require": {
-                "ext-curl": "*",
-                "php": ">=5.3.0"
-            },
-            "require-dev": {
-                "phing/phing": "2.6.*",
-                "phpunit/phpunit": "3.7.*",
-                "squizlabs/php_codesniffer": "1.5.*"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-0": {
-                    "Everyman\\Neo4j": "lib/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Josh Adell",
-                    "email": "josh.adell@gmail.com",
-                    "homepage": "http://joshadell.com"
-                }
-            ],
-            "description": "Wrapper for the Neo4j graph database REST interface",
-            "homepage": "http://github.com/jadell/neo4jphp/wiki",
-            "keywords": [
-                "database",
-                "graph",
-                "neo4j"
-            ],
-            "time": "2014-10-19 16:07:08"
-        },
-        {
-            "name": "vinelab/neoeloquent",
-            "version": "v1.2.4",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/Vinelab/NeoEloquent.git",
-                "reference": "1dcfbf5364d9bdb4377e301b21ea89988f4e2137"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/Vinelab/NeoEloquent/zipball/1dcfbf5364d9bdb4377e301b21ea89988f4e2137",
-                "reference": "1dcfbf5364d9bdb4377e301b21ea89988f4e2137",
-                "shasum": ""
-            },
-            "require": {
-                "illuminate/database": "5.*",
-                "illuminate/support": "5.*",
-                "nesbot/carbon": "~1.0",
-                "php": ">=5.4.0",
-                "vinelab/neo4jphp": "0.1.*"
-            },
-            "require-dev": {
-                "mockery/mockery": "0.9.*",
-                "phpunit/phpunit": "4.2.*"
-            },
-            "type": "library",
-            "autoload": {
-                "classmap": [
-                    "tests/TestCase.php"
-                ],
-                "psr-0": {
-                    "Vinelab\\NeoEloquent\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Abed Halawi",
-                    "email": "abed.halawi@vinelab.com"
-                }
-            ],
-            "description": "Laravel wrapper for the Neo4j graph database REST interface",
-            "keywords": [
-                "database",
-                "graph",
-                "laravel",
-                "neo4j",
-                "neoeloquent"
-            ],
-            "time": "2015-03-01 08:55:57"
         }
     ],
     "packages-dev": [
