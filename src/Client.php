@@ -249,4 +249,21 @@ class Client
 
         return $parameters;
     }
+
+    /**
+     * @param \StdClass $data
+     *
+     * @return string
+     */
+    public function guestProfileTypeFromData($data)
+    {
+        if ( ! $data instanceof \StdClass)
+            throw new \InvalidArgumentException('Data must be an object.');
+
+        if (property_exists($data, 'category')) {
+            return Profile::PAGE;
+        }
+
+        return Profile::USER;
+    }
 }
