@@ -368,4 +368,16 @@ class Object implements ArrayAccess, Arrayable
         $label = $this->getNode()->getClient()->makeLabel($label);
         $this->node->addLabels([$label]);
     }
+
+    /**
+     * @param string $id
+     *
+     * @return $this
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+
+        return $this;
+    }
 }
