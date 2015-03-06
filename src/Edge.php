@@ -172,11 +172,11 @@ class Edge
     }
 
     /**
-     * @param string $fields
+     * @param array $fields
      *
      * @return mixed
      */
-    public function publish($fields)
+    public function publish(array $fields)
     {
         $client = $this->getClient();
 
