@@ -2,6 +2,8 @@
 
 namespace Namest\Facebook;
 
+use Illuminate\Contracts\Support\Arrayable;
+
 /**
  * Class Object
  *
@@ -11,7 +13,7 @@ namespace Namest\Facebook;
  * @property string id
  *
  */
-class Object implements \ArrayAccess
+class Object implements ArrayAccess, Arrayable
 {
     /**
      * @var array
@@ -221,5 +223,13 @@ class Object implements \ArrayAccess
             default:
                 throw new \InvalidArgumentException("Not support direction [{$direction}]");
         }
+    }
+
+    /**
+     * @return array
+     */
+    public function toArray()
+    {
+        return $this->attributes;
     }
 }
