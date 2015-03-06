@@ -170,6 +170,34 @@ class Object implements \ArrayAccess
     }
 
     /**
+     * @param array $fields
+     *
+     * @return bool
+     */
+    public function update(array $fields)
+    {
+        $client = $this->getClient();
+
+        $response = $client->post("{$this->id}", $fields);
+
+        return $response->success;
+    }
+
+    /**
+     * @return bool
+     */
+    public function delete()
+    {
+        $client = $this->getClient();
+
+        $response = $client->delete("{$this->id}");
+
+        // TODO Sync with database
+
+        return $response->success;
+    }
+
+    /**
      * @param string $object
      * @param string $relation
      * @param string $edge

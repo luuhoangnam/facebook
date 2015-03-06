@@ -68,34 +68,6 @@ class Comment extends Object
     }
 
     /**
-     * @param array $fields
-     *
-     * @return bool
-     */
-    public function update(array $fields)
-    {
-        $client = $this->getClient();
-
-        $response = $client->post("{$this->id}", $fields);
-
-        return $response->success;
-    }
-
-    /**
-     * @return bool
-     */
-    public function delete()
-    {
-        $client = $this->getClient();
-
-        $response = $client->delete("{$this->id}");
-
-        // TODO Sync with database
-
-        return $response->success;
-    }
-
-    /**
      * @return array
      */
     public function getFetchRepliesParameters()
