@@ -50,6 +50,20 @@ class Comment extends Object
     }
 
     /**
+     * @return bool
+     */
+    public function delete()
+    {
+        $client = $this->getClient();
+
+        $response = $client->delete("{$this->id}");
+
+        // TODO Sync with database
+
+        return $response->success;
+    }
+
+    /**
      * @return array
      */
     public function getFetchRepliesParameters()
