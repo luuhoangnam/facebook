@@ -171,4 +171,16 @@ class Edge
 
         return $response;
     }
+
+    /**
+     * @return string
+     * @throws \Exception
+     */
+    public function getDirection()
+    {
+        if ( ! in_array($this->direction, [Edge::IN, Edge::OUT]))
+            throw new \Exception("Edge direction must be set via class inheritance");
+
+        return $this->direction;
+    }
 }
