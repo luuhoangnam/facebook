@@ -119,30 +119,7 @@ class Edge
      */
     protected function getFetchFields()
     {
-        $fields = call_user_func([$this->start, 'getFetch' . studly_case($this->edge) . 'Fields']);
-
-        return $this->buildFieldsFromArray($fields);
-    }
-
-    /**
-     * @param array $fields
-     *
-     * @return string
-     */
-    private function buildFieldsFromArray($fields)
-    {
-        $fieldsFlatArray = [];
-
-        foreach ($fields as $key => $value) {
-            if (is_array($value)) {
-                $fieldsFlatArray[] = "{$key}{" . $this->buildFieldsFromArray($value) . '}';
-                continue;
-            }
-
-            $fieldsFlatArray[] = $value;
-        }
-
-        return implode(',', $fieldsFlatArray);
+        return call_user_func([$this->start, 'getFetch' . studly_case($this->edge) . 'Fields']);
     }
 
     /**

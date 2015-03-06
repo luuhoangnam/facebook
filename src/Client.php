@@ -69,6 +69,8 @@ class Client
 
         $this->session = $this->getSession();
         $endpoint      = $this->normalizeEndpoint($endpoint);
+        $parameters    = $this->normalizeParameters($parameters);
+
         $this->request = new FacebookRequest($this->session, $method, $endpoint, $parameters);
 
         return $this->send($this->request);
@@ -212,5 +214,39 @@ class Client
     public function getSession()
     {
         return $this->session ?: new FacebookSession(static::$token);
+    }
+
+    /**
+     * @param array $fields
+     *
+     * @return string
+     */
+    private function buildFieldsFromArray($fields)
+    {
+        $fieldsFlatArray = [];
+
+        foreach ($fields as $key => $value) {
+            if (is_array($value)) {
+                $fieldsFlatArray[] = "{$key}{" . $this->buildFieldsFromArray($value) . '}';
+                continue;
+            }
+
+            $fieldsFlatArray[] = $value;
+        }
+
+        return implode(',', $fieldsFlatArray);
+    }
+
+    /**
+     * @param array $parameters
+     *
+     * @return array
+     */
+    protected function normalizeParameters(array $parameters)
+    {
+        if (array_key_exists('fields', $parameters))
+            $parameters['fields'] = $this->buildFieldsFromArray($parameters['fields']);
+
+        return $parameters;
     }
 }
