@@ -336,7 +336,7 @@ class Object implements ArrayAccess, Arrayable
     {
         $node = $node ?: $this->getNode();
 
-        $this->saveNode($node);
+        $this->node = $this->saveNode($node);
 
         $this->addLabel($this->getLabel());
 
