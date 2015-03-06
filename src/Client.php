@@ -9,10 +9,10 @@ use Facebook\FacebookOtherException;
 use Facebook\FacebookPermissionException;
 use Facebook\FacebookRequest;
 use Facebook\FacebookRequestException;
+use Facebook\FacebookResponse;
 use Facebook\FacebookServerException;
 use Facebook\FacebookSession;
 use Facebook\FacebookThrottleException;
-use Facebook\GraphObject;
 
 /**
  * Class Client
@@ -27,14 +27,30 @@ class Client
     /**
      * @var string
      */
-    private $token;
+    private static $token;
+
+    /**
+     * @var FacebookSession
+     */
+    private $session;
+
+    /**
+     * @var FacebookResponse
+     */
+    private $response;
+
+    /**
+     * @var FacebookRequest
+     */
+    private $request;
 
     /**
      * @param string $token
      */
-    public function __construct($token)
+    public function __construct($token = null)
     {
-        $this->token = $token;
+        if ( ! is_null($token))
+            static::$token = $token;
     }
 
     /**
@@ -42,19 +58,22 @@ class Client
      * @param string $endpoint
      * @param array  $parameters
      *
-     * @return GraphObject
+     * @return \StdClass
      * @throws FacebookRequestException
      * @throws Exception
      */
     protected function request($method, $endpoint, $parameters = [])
     {
-        try {
-            $session  = new FacebookSession($this->token);
-            $endpoint = $this->normalizeEndpoint($endpoint);
-            $request  = new FacebookRequest($session, $method, $endpoint, $parameters);
-            $response = $request->execute();
+        if (is_null(static::$token))
+            throw new \Exception("Token is not set!");
 
-            return $response->getGraphObject();
+        try {
+            $this->session  = $this->getSession();
+            $endpoint       = $this->normalizeEndpoint($endpoint);
+            $this->request  = new FacebookRequest($this->session, $method, $endpoint, $parameters);
+            $this->response = $this->request->execute();
+
+            return $this->response->getResponse();
         } catch ( FacebookClientException $e ) {
             //
             throw $e;
@@ -83,10 +102,34 @@ class Client
     }
 
     /**
+     * @return string
+     */
+    public static function getToken()
+    {
+        return self::$token;
+    }
+
+    /**
+     * @return FacebookResponse
+     */
+    public function getResponse()
+    {
+        return $this->response;
+    }
+
+    /**
+     * @return FacebookRequest
+     */
+    public function getRequest()
+    {
+        return $this->request;
+    }
+
+    /**
      * @param string $endpoint
      * @param array  $parameters
      *
-     * @return GraphObject
+     * @return \StdClass
      */
     public function get($endpoint, $parameters = [])
     {
@@ -97,7 +140,7 @@ class Client
      * @param string $endpoint
      * @param array  $parameters
      *
-     * @return GraphObject
+     * @return \StdClass
      */
     public function post($endpoint, $parameters = [])
     {
@@ -108,7 +151,7 @@ class Client
      * @param string $endpoint
      * @param array  $parameters
      *
-     * @return GraphObject
+     * @return \StdClass
      */
     public function delete($endpoint, $parameters = [])
     {
@@ -126,5 +169,29 @@ class Client
             $endpoint = "/{$endpoint}";
 
         return $endpoint;
+    }
+
+    /**
+     * @param string $token
+     */
+    public static function defaultToken($token)
+    {
+        static::$token = $token;
+    }
+
+    /**
+     * @param string $token
+     */
+    public function setToken($token)
+    {
+        static::$token = $token;
+    }
+
+    /**
+     * @return FacebookSession
+     */
+    public function getSession()
+    {
+        return $this->session ?: new FacebookSession(static::$token);
     }
 }

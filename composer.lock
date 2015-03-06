@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "dfcf9672ce1e192776e1ac1857a95237",
+    "hash": "d0338d76d53a275011ba9c57e1bcfca5",
     "packages": [
         {
             "name": "danielstjules/stringy",
@@ -130,17 +130,66 @@
             "time": "2014-12-20 21:24:13"
         },
         {
-            "name": "facebook/php-sdk-v4",
-            "version": "4.0.18",
+            "name": "everyman/neo4jphp",
+            "version": "dev-master",
             "source": {
                 "type": "git",
-                "url": "https://github.com/facebook/facebook-php-sdk-v4.git",
-                "reference": "e3f5645354f516331dc2c9c3f16428ec5a27bb21"
+                "url": "https://github.com/jadell/neo4jphp.git",
+                "reference": "0b8c6b622c4885816aca06dee9ab45bcc096d827"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/facebook/facebook-php-sdk-v4/zipball/e3f5645354f516331dc2c9c3f16428ec5a27bb21",
-                "reference": "e3f5645354f516331dc2c9c3f16428ec5a27bb21",
+                "url": "https://api.github.com/repos/jadell/neo4jphp/zipball/0b8c6b622c4885816aca06dee9ab45bcc096d827",
+                "reference": "0b8c6b622c4885816aca06dee9ab45bcc096d827",
+                "shasum": ""
+            },
+            "require": {
+                "ext-curl": "*",
+                "php": ">=5.3.0"
+            },
+            "require-dev": {
+                "phing/phing": "2.6.*",
+                "phpunit/phpunit": "3.7.*",
+                "squizlabs/php_codesniffer": "1.5.*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "Everyman\\Neo4j": "lib/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Josh Adell",
+                    "email": "josh.adell@gmail.com",
+                    "homepage": "http://joshadell.com"
+                }
+            ],
+            "description": "Wrapper for the Neo4j graph database REST interface",
+            "homepage": "http://github.com/jadell/neo4jphp/wiki",
+            "keywords": [
+                "database",
+                "graph",
+                "neo4j"
+            ],
+            "time": "2014-05-10 01:59:00"
+        },
+        {
+            "name": "facebook/php-sdk-v4",
+            "version": "4.0.20",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/facebook/facebook-php-sdk-v4.git",
+                "reference": "0c8ea23d81e09cc7e2c38b1d7f663fd5006dce84"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/facebook/facebook-php-sdk-v4/zipball/0c8ea23d81e09cc7e2c38b1d7f663fd5006dce84",
+                "reference": "0c8ea23d81e09cc7e2c38b1d7f663fd5006dce84",
                 "shasum": ""
             },
             "require": {
@@ -176,7 +225,49 @@
                 "facebook",
                 "sdk"
             ],
-            "time": "2015-02-24 19:22:51"
+            "time": "2015-03-03 00:03:54"
+        },
+        {
+            "name": "illuminate/container",
+            "version": "v5.0.4",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/illuminate/container.git",
+                "reference": "7ffdad0a2b2c600445deb57f5f7e93092e44ca2a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/illuminate/container/zipball/7ffdad0a2b2c600445deb57f5f7e93092e44ca2a",
+                "reference": "7ffdad0a2b2c600445deb57f5f7e93092e44ca2a",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/contracts": "5.0.*",
+                "php": ">=5.4.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "5.0-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Illuminate\\Container\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Taylor Otwell",
+                    "email": "taylorotwell@gmail.com"
+                }
+            ],
+            "description": "The Illuminate Container package.",
+            "time": "2015-02-11 16:00:31"
         },
         {
             "name": "illuminate/contracts",
@@ -218,6 +309,63 @@
             ],
             "description": "The Illuminate Contracts package.",
             "time": "2015-01-30 16:27:08"
+        },
+        {
+            "name": "illuminate/database",
+            "version": "v5.0.4",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/illuminate/database.git",
+                "reference": "1f83a771a2e3e1c5fa34b9e543229f506caa9aa2"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/illuminate/database/zipball/1f83a771a2e3e1c5fa34b9e543229f506caa9aa2",
+                "reference": "1f83a771a2e3e1c5fa34b9e543229f506caa9aa2",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/container": "5.0.*",
+                "illuminate/contracts": "5.0.*",
+                "illuminate/support": "5.0.*",
+                "nesbot/carbon": "~1.0",
+                "php": ">=5.4.0"
+            },
+            "suggest": {
+                "doctrine/dbal": "Required to rename columns and drop SQLite columns (~2.4).",
+                "illuminate/console": "Required to use the database commands (5.0.*).",
+                "illuminate/events": "Required to use the observers with Eloquent (5.0.*).",
+                "illuminate/filesystem": "Required to use the migrations (5.0.*)."
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "5.0-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Illuminate\\Database\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Taylor Otwell",
+                    "email": "taylorotwell@gmail.com"
+                }
+            ],
+            "description": "The Illuminate Database package.",
+            "keywords": [
+                "database",
+                "laravel",
+                "orm",
+                "sql"
+            ],
+            "time": "2015-02-11 20:11:33"
         },
         {
             "name": "illuminate/support",
@@ -269,6 +417,155 @@
             ],
             "description": "The Illuminate Support package.",
             "time": "2015-02-11 11:08:03"
+        },
+        {
+            "name": "nesbot/carbon",
+            "version": "1.16.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/briannesbitt/Carbon.git",
+                "reference": "9b7665041754eaa9bb2622349bc9adbc1cf61cb8"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/briannesbitt/Carbon/zipball/9b7665041754eaa9bb2622349bc9adbc1cf61cb8",
+                "reference": "9b7665041754eaa9bb2622349bc9adbc1cf61cb8",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~4.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "Carbon": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Brian Nesbitt",
+                    "email": "brian@nesbot.com",
+                    "homepage": "http://nesbot.com"
+                }
+            ],
+            "description": "A simple API extension for DateTime.",
+            "homepage": "http://carbon.nesbot.com",
+            "keywords": [
+                "date",
+                "datetime",
+                "time"
+            ],
+            "time": "2015-03-04 04:50:11"
+        },
+        {
+            "name": "vinelab/neo4jphp",
+            "version": "v0.1.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Vinelab/neo4jphp.git",
+                "reference": "d7ae484bfcdcfec61d24b22b933b4dbc48d60eb0"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Vinelab/neo4jphp/zipball/d7ae484bfcdcfec61d24b22b933b4dbc48d60eb0",
+                "reference": "d7ae484bfcdcfec61d24b22b933b4dbc48d60eb0",
+                "shasum": ""
+            },
+            "require": {
+                "ext-curl": "*",
+                "php": ">=5.3.0"
+            },
+            "require-dev": {
+                "phing/phing": "2.6.*",
+                "phpunit/phpunit": "3.7.*",
+                "squizlabs/php_codesniffer": "1.5.*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "Everyman\\Neo4j": "lib/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Josh Adell",
+                    "email": "josh.adell@gmail.com",
+                    "homepage": "http://joshadell.com"
+                }
+            ],
+            "description": "Wrapper for the Neo4j graph database REST interface",
+            "homepage": "http://github.com/jadell/neo4jphp/wiki",
+            "keywords": [
+                "database",
+                "graph",
+                "neo4j"
+            ],
+            "time": "2014-10-19 16:07:08"
+        },
+        {
+            "name": "vinelab/neoeloquent",
+            "version": "v1.2.4",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Vinelab/NeoEloquent.git",
+                "reference": "1dcfbf5364d9bdb4377e301b21ea89988f4e2137"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Vinelab/NeoEloquent/zipball/1dcfbf5364d9bdb4377e301b21ea89988f4e2137",
+                "reference": "1dcfbf5364d9bdb4377e301b21ea89988f4e2137",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/database": "5.*",
+                "illuminate/support": "5.*",
+                "nesbot/carbon": "~1.0",
+                "php": ">=5.4.0",
+                "vinelab/neo4jphp": "0.1.*"
+            },
+            "require-dev": {
+                "mockery/mockery": "0.9.*",
+                "phpunit/phpunit": "4.2.*"
+            },
+            "type": "library",
+            "autoload": {
+                "classmap": [
+                    "tests/TestCase.php"
+                ],
+                "psr-0": {
+                    "Vinelab\\NeoEloquent\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Abed Halawi",
+                    "email": "abed.halawi@vinelab.com"
+                }
+            ],
+            "description": "Laravel wrapper for the Neo4j graph database REST interface",
+            "keywords": [
+                "database",
+                "graph",
+                "laravel",
+                "neo4j",
+                "neoeloquent"
+            ],
+            "time": "2015-03-01 08:55:57"
         }
     ],
     "packages-dev": [
@@ -1292,7 +1589,9 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {
+        "everyman/neo4jphp": 20
+    },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": [],

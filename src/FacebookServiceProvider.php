@@ -2,6 +2,7 @@
 
 namespace Namest\Facebook;
 
+use Facebook\FacebookSession;
 use Illuminate\Support\ServiceProvider;
 
 /**
@@ -31,6 +32,10 @@ class FacebookServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        // TODO: Implement register() method.
+        $appId     = $this->app['config']->get('facebook.app_id');
+        $appSecret = $this->app['config']->get('facebook.app_secret');
+
+        FacebookSession::setDefaultApplication($appId, $appSecret);
+        Client::defaultToken('CAAXDftrRQX8BAKLVUHsTUtYVZCi6KSzcbC8Llvm3r72Y9jqzpZCOcQJjXZByE29ZA4A6e9RGdg0odP2xkI1r3SzKLP0zZA04wlHFT4EjZAHG3kK3k1YfkAHBzXdtPZC081oUXHPlg8abtsAI4EP3pkO5EflKTTTdm2Gje2hJYmDPyVNhYZCT2BnefZCeo3iTqhJlUiw8lgSXZAeuBRWZChlLCMa');
     }
 }
