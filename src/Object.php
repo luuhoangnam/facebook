@@ -352,7 +352,7 @@ class Object implements ArrayAccess, Arrayable
     {
         $node = $node ?: $this->getNode();
 
-        $node->setProperties($this->attributes);
+        $this->setNodeProperties($node);
         $node->save();
 
         return $node;
@@ -366,6 +366,7 @@ class Object implements ArrayAccess, Arrayable
         $label = $label ?: $this->getLabel();
 
         $label = $this->getNode()->getClient()->makeLabel($label);
+
         $this->node->addLabels([$label]);
     }
 
@@ -379,5 +380,44 @@ class Object implements ArrayAccess, Arrayable
         $this->id = $id;
 
         return $this;
+    }
+
+    /**
+     * @param Node  $node
+     * @param array $attributes
+     */
+    protected function setNodeProperties($node = null, $attributes = [])
+    {
+        $node       = $node ?: $this->getNode();
+        $attributes = $attributes ?: $this->attributes;
+
+        foreach ($attributes as $key => $value) {
+            if ($this->hasHydrator($key)) {
+                $value = $this->hydrateField($key, $value);
+            }
+
+            $node->setProperty($key, $value);
+        }
+    }
+
+    /**
+     * @param string $field
+     *
+     * @return bool
+     */
+    private function hasHydrator($field)
+    {
+        return method_exists($this, 'hydrate' . studly_case($field) . 'Field');
+    }
+
+    /**
+     * @param string $field
+     * @param mixed  $value
+     *
+     * @return mixed
+     */
+    public function hydrateField($field, $value)
+    {
+        return $this->{'hydrate' . studly_case($field) . 'Field'}($value);
     }
 }
