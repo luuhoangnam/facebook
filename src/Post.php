@@ -38,15 +38,7 @@ class Post extends Object
             'message',
             'can_remove',
             'can_hide',
-            'parent' => [
-                'id',
-                'from'     => ['id', 'name', 'picture'],
-                'message',
-                'comments' => [
-                    'id',
-                    'message',
-                ],
-            ],
+            'parent' => ['id'],
         ];
     }
 }
