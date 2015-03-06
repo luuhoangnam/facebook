@@ -77,7 +77,9 @@ class Edge
         if ($this->hasFetchFields())
             $parameters['fields'] = $this->getFetchFields();
 
-        return $this->getClient()->get("{$this->start->id}/{$this->edge}", $parameters);
+        $results = $this->realFetch($parameters);
+
+        return $results;
     }
 
     /**
@@ -141,5 +143,31 @@ class Edge
         }
 
         return implode(',', $fieldsFlatArray);
+    }
+
+    /**
+     * @param array $parameters
+     *
+     * @return \StdClass|array
+     */
+    protected function realFetch(array $parameters)
+    {
+        $collection = [];
+
+        $client   = $this->getClient();
+        $response = $client->get("{$this->start->id}/{$this->edge}", $parameters);
+
+        while (property_exists($response, 'data')) {
+            foreach ($response->data as $item) {
+                $collection[] = $item;
+            }
+
+            if (($request = $client->getResponse()->getRequestForNextPage()))
+                $response = $this->client->send($request);
+            else
+                $response = new \StdClass;
+        }
+
+        return $collection ?: $response;
     }
 }
