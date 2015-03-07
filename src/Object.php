@@ -284,14 +284,22 @@ class Object implements ArrayAccess, Arrayable
      */
     public function save()
     {
-        $this->node = $this->findNode();
-        if (is_null($this->node)) {
-            // CREATE
-            return $this->node = $this->createNode();
-        }
+        if ($this->fireEvent('saving') === false)
+            return false;
 
-        // UPDATE
-        return $this->node = $this->saveNode();
+        $this->node = $this->findNode();
+
+        if (is_null($this->node))
+            // CREATE
+            $result = $this->performCreate();
+        else
+            // UPDATE
+            $result = $this->performUpdate();
+
+        if ($result)
+            $this->fireEvent('saved', false);
+
+        return $result;
     }
 
     /**
@@ -579,5 +587,35 @@ class Object implements ArrayAccess, Arrayable
     public static function updated($callback, $priority = 0)
     {
         static::registerEvent('updated', $callback, $priority);
+    }
+
+    /**
+     * @return bool|Node
+     */
+    protected function performCreate()
+    {
+        if ($this->fireEvent('creating') === false)
+            return false;
+
+        $this->node = $this->createNode();
+
+        $this->fireEvent('created', false);
+
+        return $this->node;
+    }
+
+    /**
+     * @return bool|Node
+     */
+    protected function performUpdate()
+    {
+        if ($this->fireEvent('updating') === false)
+            return false;
+
+        $this->node = $this->saveNode();
+
+        $this->fireEvent('updated', false);
+
+        return $this->node;
     }
 }
