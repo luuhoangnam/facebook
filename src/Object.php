@@ -3,9 +3,12 @@
 namespace Namest\Facebook;
 
 use ArrayAccess;
+use Closure;
 use Everyman\Neo4j\Client as Neo4jClient;
 use Everyman\Neo4j\Cypher\Query;
 use Everyman\Neo4j\Node;
+use Illuminate\Contracts\Events\Dispatcher;
+use Illuminate\Contracts\Events\DispatcΩher;
 use Illuminate\Contracts\Support\Arrayable;
 
 /**
@@ -53,6 +56,13 @@ class Object implements ArrayAccess, Arrayable
      * @var array
      */
     protected $fields = [];
+
+    /**
+     * The event dispatcher instance.
+     *
+     * @var Dispatcher
+     */
+    protected static $dispatcher;
 
     /**
      * @param array $attributes
@@ -427,4 +437,60 @@ class Object implements ArrayAccess, Arrayable
     {
         return $this->{'hydrate' . studly_case($field) . 'Field'}($value);
     }
+
+    /**
+     * @param Dispatcher $dispatcher
+     *
+     * @return void
+     */
+    public static function setEventDispatcher(Dispatcher $dispatcher)
+    {
+        static::$dispatcher = $dispatcher;
+    }
+
+    /**
+     * @return void
+     */
+    public static function unsetEventDispatcher()
+    {
+        static::$dispatcher = null;
+    }
+
+    /**
+     * @param string $event
+     * @param bool   $halt
+     *
+     * @return mixed
+     */
+    protected function fireEvent($event, $halt = true)
+    {
+        if ( ! isset(static::$dispatcher))
+            return true;
+
+        // We will append the names of the class to the event to distinguish it from
+        // other model events that are fired, allowing us to listen on each model
+        // event set individually instead of catching event for all the models.
+        $event = "namest.facebook.{$event}: " . get_class($this);
+
+        $method = $halt ? 'until' : 'fire';
+
+        return static::$dispatcher->$method($event, $this);
+    }
+
+    /**
+     * @param string         $event
+     * @param Closure|string $callback
+     * @param int            $priority
+     *
+     * @return void
+     */
+    protected static function registerEvent($event, $callback, $priority = 0)
+    {
+        if (isset(static::$dispatcher)) {
+            $name = get_called_class();
+
+            static::$dispatcher->listen("namest.facebook.{$event}: {$name}", $callback, $priority);
+        }
+    }
+
 }

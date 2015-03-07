@@ -32,6 +32,13 @@ class FacebookServiceProvider extends ServiceProvider
      */
     public function register()
     {
+        $this->registerFacebookServices();
+
+        Object::setEventDispatcher($this->app['events']);
+    }
+
+    protected function registerFacebookServices()
+    {
         $appId     = $this->app['config']->get('facebook.app_id');
         $appSecret = $this->app['config']->get('facebook.app_secret');
 
