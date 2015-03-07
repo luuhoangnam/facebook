@@ -493,4 +493,91 @@ class Object implements ArrayAccess, Arrayable
         }
     }
 
+    /**
+     * @param Closure|string $callback
+     * @param int            $priority
+     *
+     * @return void
+     */
+    public static function saving($callback, $priority = 0)
+    {
+        static::registerEvent('saving', $callback, $priority);
+    }
+
+    /**
+     * @param Closure|string $callback
+     * @param int            $priority
+     *
+     * @return void
+     */
+    public static function saved($callback, $priority = 0)
+    {
+        static::registerEvent('saved', $callback, $priority);
+    }
+
+    /**
+     * @param Closure|string $callback
+     * @param int            $priority
+     *
+     * @return void
+     */
+    public static function creating($callback, $priority = 0)
+    {
+        static::registerEvent('creating', $callback, $priority);
+    }
+
+    /**
+     * @param Closure|string $callback
+     * @param int            $priority
+     *
+     * @return void
+     */
+    public static function created($callback, $priority = 0)
+    {
+        static::registerEvent('created', $callback, $priority);
+    }
+
+    /**
+     * @param Closure|string $callback
+     * @param int            $priority
+     *
+     * @return void
+     */
+    public static function deleting($callback, $priority = 0)
+    {
+        static::registerEvent('deleting', $callback, $priority);
+    }
+
+    /**
+     * @param Closure|string $callback
+     * @param int            $priority
+     *
+     * @return void
+     */
+    public static function deleted($callback, $priority = 0)
+    {
+        static::registerEvent('deleted', $callback, $priority);
+    }
+
+    /**
+     * @param Closure|string $callback
+     * @param int            $priority
+     *
+     * @return void
+     */
+    public static function updating($callback, $priority = 0)
+    {
+        static::registerEvent('updating', $callback, $priority);
+    }
+
+    /**
+     * @param Closure|string $callback
+     * @param int            $priority
+     *
+     * @return void
+     */
+    public static function updated($callback, $priority = 0)
+    {
+        static::registerEvent('updated', $callback, $priority);
+    }
 }
