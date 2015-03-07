@@ -287,14 +287,7 @@ class Object implements ArrayAccess, Arrayable
         if ($this->fireEvent('saving') === false)
             return false;
 
-        $this->node = $this->findNode();
-
-        if (is_null($this->node))
-            // CREATE
-            $result = $this->performCreate();
-        else
-            // UPDATE
-            $result = $this->performUpdate();
+        $result = $this->performSave();
 
         if ($result)
             $this->fireEvent('saved', false);
@@ -617,5 +610,20 @@ class Object implements ArrayAccess, Arrayable
         $this->fireEvent('updated', false);
 
         return $this->node;
+    }
+
+    /**
+     * @return bool|Node
+     */
+    protected function performSave()
+    {
+        $this->node = $this->findNode();
+
+        if (is_null($this->node))
+            // CREATE
+            return $this->performCreate();
+
+        // UPDATE
+        return $this->performUpdate();
     }
 }
