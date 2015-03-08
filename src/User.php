@@ -16,8 +16,15 @@ class User extends Profile
      */
     public function accounts()
     {
-        // (u:User)-[r:MANAGE]->(p:Page)
-        return $this->hasMany(Page::class, 'MANAGE');
+        $options = [
+            'cast'   => Edge::COLLECTION,
+            'saving' => [
+                'relation' => ['access_token', 'perms'],
+            ],
+        ];
+
+        return $this->hasMany(Page::class, 'MANAGE', 'accounts', Edge::IN, $options);
+    }
 
     /**
      * @return array
