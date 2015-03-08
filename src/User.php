@@ -18,5 +18,18 @@ class User extends Profile
     {
         // (u:User)-[r:MANAGE]->(p:Page)
         return $this->hasMany(Page::class, 'MANAGE');
+
+    /**
+     * @return array
+     */
+    public function getFetchAccountsFields()
+    {
+        return [
+            'access_token',
+            'category',
+            'perms',
+            'name',
+            'id',
+        ];
     }
 }
