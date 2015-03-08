@@ -284,6 +284,31 @@ class Edge
 
         return new Query($client, $statement);
     }
+
+    public function sync()
+    {
+        $results = $this->fetch();
+
+        $saving = $this->options['saving'];
+
+        foreach ($results as $result) {
+            $relationProperties = [];
+
+            foreach ((array) $result as $key => $value) {
+                if (in_array($key, $saving['end']))
+                    $this->end->setAttribute($key, $value);
+
+                if (in_array($key, $saving['relation']))
+                    $relationProperties[$key] = $value;
+            }
+
+            $this->end->save();
+
+            if ($relationProperties)
+                $this->createUniqueRelationship($relationProperties);
+        }
+    }
+
     /**
      * Save the end node
      *
@@ -326,10 +351,12 @@ class Edge
     }
 
     /**
-     * @return mixed
+     * @param array $properties
+     *
+     * @return Relationship
      * @throws Exception
      */
-    protected function createUniqueRelationship()
+    protected function createUniqueRelationship($properties = [])
     {
         $startNodeLabel = $this->start->getLabel();
         $endNodeLabel   = $this->end->getLabel();
@@ -343,10 +370,23 @@ class Edge
                             AND end.id = \"{$endNodeId}\"
                         CREATE UNIQUE (start)"
                        . ($direction === Edge::OUT ? '<' : '')
-                       . "-[relation:{$relation}]-"
-                       . ($direction === Edge::IN ? '>' : '')
-                       . "(end)
-                        RETURN relation";
+                       . "-[relation:{$relation} ";
+
+        $queryString .= "]-"
+                        . ($direction === Edge::IN ? '>' : '')
+                        . "(end)";
+
+        if ($properties) {
+            $properties = array_map(function ($key, $value) {
+                if ( ! is_string($value))
+                    $value = htmlentities(serialize($value));
+
+                return "relation.{$key} = \"{$value}\"";
+            }, array_keys($properties), array_values($properties));
+            $queryString .= ' SET ' . implode(',', $properties) . '';
+        }
+
+        $queryString .= " RETURN relation";
 
         $results = $this->getCypherQuery($queryString)->getResultSet();
 
