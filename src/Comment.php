@@ -137,6 +137,13 @@ class Comment extends Object
                 $profile = new User;
         }
 
+        /** @var Profile $profile */
         $profile = $profile->setId($data->id)->sync();
+
+        $this->saved(function () use ($profile) {
+            // TODO Make edge relation
+
+        });
     }
+
 }
