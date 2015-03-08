@@ -22,6 +22,14 @@ class Comment extends Object
     ];
 
     /**
+     * Relation to profile who make this comment
+     */
+    public function profile()
+    {
+        return $this->belongsTo(Profile::class, 'LEAVE', false, Edge::IN);
+    }
+
+    /**
      * @return EdgeOut
      */
     public function comments()
