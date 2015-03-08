@@ -16,7 +16,11 @@ class Post extends Object
      */
     public function comments()
     {
-        return $this->hasMany(Comment::class, 'ON', 'comments', Edge::IN);
+        $options = [
+            'cast' => Edge::COLLECTION,
+        ];
+
+        return $this->hasMany(Comment::class, 'ON', 'comments', Edge::OUT, $options);
     }
 
     /**
