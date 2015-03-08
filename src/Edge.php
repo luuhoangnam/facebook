@@ -202,6 +202,21 @@ class Edge
     }
 
     /**
+
+    /**
+     * @param string $statement
+     *
+     * @return Query
+     * @throws Exception
+     */
+    protected function getCypherQuery($statement)
+    {
+        $client = $this->start->getNode()->getClient() ?: $this->end->getNode()->getClient() ?: null;
+        if (is_null($client))
+            throw new Exception("Can not find appropriate Neo4j client from start or end node of this edge.");
+
+        return new Query($client, $statement);
+    }
      * @return array
      *
      * @throws Exception
