@@ -200,4 +200,19 @@ class Edge
 
         return $this->direction;
     }
+
+    /**
+     * @return array
+     *
+     * @throws Exception
+     */
+    protected function findRelationships()
+    {
+        $this->start->save();
+
+        /** @var Node $node */
+        $node = $this->start->getNode();
+
+        return $node->getRelationships($this->relation, $this->getDirection());
+    }
 }
