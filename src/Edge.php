@@ -16,6 +16,14 @@ class Edge
     const IN = 'in';
     const OUT = 'out';
 
+    const SINGLE = 'single';
+    const COLLECTION = 'collection';
+
+    /**
+     * @var string
+     */
+    protected $direction;
+
     /**
      * @var Object
      */
@@ -37,9 +45,9 @@ class Edge
     protected $edge;
 
     /**
-     * @var string
+     * @var array
      */
-    protected $direction;
+    protected $options = [];
 
     /**
      * @var Client
@@ -51,18 +59,27 @@ class Edge
      * @param string $relation
      * @param Object $end
      * @param string $edge
+     * @param array  $options
      *
-     * @throws \Exception
+     * @throws Exception
+     *
      */
-    public function __construct($start, $relation, $end, $edge)
+    public function __construct($start, $relation, $end, $edge, $options = [])
     {
         if ( ! in_array($this->direction, [Edge::IN, Edge::OUT]))
-            throw new \Exception("Edge direction must be set via class inheritance");
+            throw new Exception("Edge direction must be set via class inheritance");
+
+        if ( ! in_array('cast', $options))
+            $options['cast'] = Edge::SINGLE;
+
+        if ( ! in_array($options['cast'], [Edge::SINGLE, Edge::COLLECTION]))
+            throw new \InvalidArgumentException("Result casting must be value of Edge::SINGLE or Edge::COLLECTION.");
 
         $this->start    = $start;
         $this->relation = $relation;
         $this->end      = $end;
         $this->edge     = $edge;
+        $this->options  = $options;
     }
 
     /**
@@ -174,12 +191,12 @@ class Edge
 
     /**
      * @return string
-     * @throws \Exception
+     * @throws Exception
      */
     public function getDirection()
     {
         if ( ! in_array($this->direction, [Edge::IN, Edge::OUT]))
-            throw new \Exception("Edge direction must be set via class inheritance");
+            throw new Exception("Edge direction must be set via class inheritance");
 
         return $this->direction;
     }
