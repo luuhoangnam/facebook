@@ -11,6 +11,14 @@ namespace Namest\Facebook;
  */
 class Post extends Object
 {
+    protected $fields = [
+        'id',
+        'from' => ['id', 'name', 'category'],
+        'message',
+        'created_time',
+        'updated_time',
+    ];
+
     /**
      * @return EdgeOut
      */
