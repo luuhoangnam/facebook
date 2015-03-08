@@ -18,4 +18,14 @@ class Page extends Profile
     {
         return $this->hasMany(Post::class, 'OWN');
     }
+
+    protected $fields = [
+        'id',
+        'about',
+        'category',
+        'name',
+        'username',
+        'website',
+        'phone',
+    ];
 }
