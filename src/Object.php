@@ -10,6 +10,7 @@ use Everyman\Neo4j\Node;
 use Illuminate\Contracts\Events\Dispatcher;
 use Illuminate\Contracts\Events\DispatcΩher;
 use Illuminate\Contracts\Support\Arrayable;
+use LogicException;
 
 /**
  * Class Object
@@ -65,6 +66,11 @@ class Object implements ArrayAccess, Arrayable
     protected static $dispatcher;
 
     /**
+     * @var array
+     */
+    protected $edges = [];
+
+    /**
      * @param array $attributes
      */
     public function __construct($attributes = [])
@@ -109,6 +115,14 @@ class Object implements ArrayAccess, Arrayable
     {
         if (in_array($key, $this->required) && ! array_key_exists($key, $this->attributes))
             throw new \LogicException("[{$key}] is required to be set.");
+
+        if (array_key_exists($key, $this->edges)) {
+            return $this->edges[$key];
+        }
+
+        if (method_exists($this, $key)) {
+            return $this->getEdgeFromMethod($key);
+        }
 
         return $this->attributes[$key];
     }
@@ -248,10 +262,12 @@ class Object implements ArrayAccess, Arrayable
      * @param string $relation
      * @param string $edge
      * @param string $direction
+     * @param array  $options
      *
      * @return EdgeOut
+     *
      */
-    protected function hasMany($object, $relation, $edge = null, $direction = Edge::OUT)
+    protected function hasMany($object, $relation, $edge = null, $direction = Edge::OUT, $options = [])
     {
         if (is_null($edge)) {
             list(, $caller) = debug_backtrace(false, 2);
@@ -259,16 +275,7 @@ class Object implements ArrayAccess, Arrayable
             $edge = $caller['function'];
         }
 
-        switch ($direction) {
-            case Edge::OUT:
-                /** @noinspection PhpParamsInspection */
-                return new EdgeOut($this, $relation, new $object, $edge);
-            case Edge::IN:
-                /** @noinspection PhpParamsInspection */
-                return new EdgeIn($this, $relation, new $object, $edge);
-            default:
-                throw new \InvalidArgumentException("Not support direction [{$direction}]");
-        }
+        return $this->makeEdge($object, $relation, $edge, $direction, $options);
     }
 
     /**
@@ -306,7 +313,7 @@ class Object implements ArrayAccess, Arrayable
     /**
      * @return string
      */
-    protected function getLabel()
+    public function getLabel()
     {
         $className = get_class($this);
 
@@ -625,5 +632,67 @@ class Object implements ArrayAccess, Arrayable
 
         // UPDATE
         return $this->performUpdate();
+    }
+
+    /**
+     * @param string $object
+     * @param string $relation
+     * @param string $edge
+     * @param string $direction
+     * @param array  $options
+     *
+     * @return EdgeOut
+     *
+     */
+    protected function belongsTo($object, $relation, $edge = null, $direction = Edge::OUT, $options = [])
+    {
+        // (profile:Profile)-[r1:LEAVE]->(c:Comment)-[r2:ON]->(post:Post)
+        if (is_null($edge)) {
+            list(, $caller) = debug_backtrace(false, 2);
+
+            $edge = $caller['function'];
+        }
+
+        return $this->makeEdge($object, $relation, $edge, $direction, $options);
+    }
+
+    /**
+     * @param string $object
+     * @param string $relation
+     * @param string $edge
+     * @param string $direction
+     * @param array  $options
+     *
+     * @return EdgeIn|EdgeOut
+     *
+     */
+    protected function makeEdge($object, $relation, $edge, $direction, $options = [])
+    {
+        switch ($direction) {
+            case Edge::OUT:
+                /** @noinspection PhpParamsInspection */
+                return new EdgeOut($this, $relation, new $object, $edge, $options);
+            case Edge::IN:
+                /** @noinspection PhpParamsInspection */
+                return new EdgeIn($this, $relation, new $object, $edge, $options);
+            default:
+                throw new \InvalidArgumentException("Not support direction [{$direction}]");
+        }
+    }
+
+    /**
+     * @param string $method
+     *
+     * @return array|Object
+     */
+    private function getEdgeFromMethod($method)
+    {
+        $edge = $this->$method();
+
+        if ( ! $edge instanceof Edge) {
+            throw new LogicException('Edge method must return an object of type ' . Edge::class);
+        }
+
+        return $this->edges[$method] = $edge->get();
     }
 }
