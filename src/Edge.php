@@ -202,6 +202,64 @@ class Edge
     }
 
     /**
+     * @return array|Object
+     */
+    public function get()
+    {
+        $startNodeLabel = $this->start->getLabel();
+        $endNodeLabel   = $this->end->getLabel();
+        $relation       = $this->relation;
+        $startNodeId    = $this->start->id;
+        $direction      = $this->getDirection();
+
+        $queryString = "MATCH (start:{$startNodeLabel})"
+                       . ($direction === Edge::OUT ? '<' : '')
+                       . "-[relation:{$relation}]-"
+                       . ($direction === Edge::IN ? '>' : '')
+                       . "(end:{$endNodeLabel})
+                        WHERE start.id = \"{$startNodeId}\"
+                        RETURN relation, end";
+
+        $results = $this->getCypherQuery($queryString)->getResultSet();
+
+        if (count($results) === 0)
+            return null;
+
+        if ($this->options['cast'] === Edge::SINGLE) {
+            /** @var Relationship $relationship */
+            $relationship = $results->current()['relation'];
+
+            if ($this->getDirection() === Edge::IN)
+                $node = $relationship->getEndNode();
+            else
+                $node = $relationship->getStartNode();
+
+            $class = get_class($this->end);
+
+            $properties = $node->getProperties();
+
+            $properties['relationship'] = $relationship->getProperties();
+
+            return new $class($properties);
+        }
+
+        // Cast to collection
+        $collection = new Collection;
+        foreach ($results as $result) {
+            /** @var Node $node */
+            $node       = $result['end'];
+            $properties = $node->getProperties();
+            /** @var Relationship $relationship */
+            $relationship = $result['relation'];
+
+            $properties['relationship'] = $relationship->getProperties();
+
+            $endClass     = get_class($this->end);
+            $collection[] = new $endClass($properties);
+        }
+
+        return $collection;
+    }
 
     /**
      * @param string $statement
