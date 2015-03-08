@@ -11,5 +11,5 @@ namespace Namest\Facebook;
  */
 class EdgeIn extends Edge
 {
-    protected $direction = 'out';
+    protected $direction = 'in';
 }
