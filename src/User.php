@@ -24,6 +24,7 @@ class User extends Profile
             'cast'   => Edge::COLLECTION,
             'saving' => [
                 'relation' => ['access_token', 'perms'],
+                'end'      => ['id', 'name', 'category'],
             ],
         ];
 
