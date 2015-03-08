@@ -3,6 +3,12 @@
 
 namespace Namest\Facebook;
 
+use Everyman\Neo4j\Cypher\Query;
+use Everyman\Neo4j\Node;
+use Everyman\Neo4j\Relationship;
+use Exception;
+use Illuminate\Support\Collection;
+
 
 /**
  * Class Edge
