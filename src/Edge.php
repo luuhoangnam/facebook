@@ -215,4 +215,34 @@ class Edge
 
         return $node->getRelationships($this->relation, $this->getDirection());
     }
+
+    /**
+     * @return mixed
+     * @throws Exception
+     */
+    protected function createUniqueRelationship()
+    {
+        $startNodeLabel = $this->start->getLabel();
+        $endNodeLabel   = $this->end->getLabel();
+        $relation       = $this->relation;
+        $startNodeId    = $this->start->id;
+        $endNodeId      = $this->end->id;
+        $direction      = $this->getDirection();
+
+        $queryString = "MATCH (start:{$startNodeLabel}),(end:{$endNodeLabel})
+                        WHERE start.id = \"{$startNodeId}\"
+                            AND end.id = \"{$endNodeId}\"
+                        CREATE UNIQUE (start)"
+                       . ($direction === Edge::OUT ? '<' : '')
+                       . "-[relation:{$relation}]-"
+                       . ($direction === Edge::IN ? '>' : '')
+                       . "(end)
+                        RETURN relation";
+
+        $results = $this->getCypherQuery($queryString)->getResultSet();
+
+        $relationship = $results->current()['relation'];
+
+        return $relationship;
+    }
 }
