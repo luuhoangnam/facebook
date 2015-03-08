@@ -87,6 +87,9 @@ class Edge
      */
     public function fetch()
     {
+        if ($this->edge === false)
+            throw new \BadMethodCallException("Can not call fetch() method on non facebook edge.");
+
         $parameters = [];
         if ($this->hasFetchParameters())
             $parameters = $this->getFetchParameters();
