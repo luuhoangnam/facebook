@@ -275,6 +275,33 @@ class Edge
 
         return new Query($client, $statement);
     }
+    /**
+     * Save the end node
+     *
+     * @param $object
+     *
+     * @throws Exception
+     * @throws \Everyman\Neo4j\Exception
+     *
+     * @return \StdClass
+     */
+    public function save(Object $object)
+    {
+        $this->end->fill($object->toArray());
+
+        $relationship = $this->createUniqueRelationship();
+
+        if ($this->getDirection() === Edge::IN)
+            $properties = $relationship->getEndNode()->getProperties();
+        else
+            $properties = $relationship->getStartNode()->getProperties();
+
+        $class = get_class($this->end);
+
+        return new $class($properties);
+    }
+
+    /**
      * @return array
      *
      * @throws Exception
