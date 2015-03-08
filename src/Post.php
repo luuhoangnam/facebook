@@ -8,6 +8,8 @@ namespace Namest\Facebook;
  * @author  Nam Hoang Luu <nam@mbearvn.com>
  * @package Namest\Facebook
  *
+ * @property-read array comments
+ *
  */
 class Post extends Object
 {
