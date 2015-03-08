@@ -2,11 +2,15 @@
 
 namespace Namest\Facebook;
 
+use Illuminate\Support\Collection;
+
 /**
  * Class User
  *
  * @author  Nam Hoang Luu <nam@mbearvn.com>
  * @package Namest\Facebook
+ *
+ * @property-read Collection accounts
  *
  */
 class User extends Profile
