@@ -70,6 +70,11 @@ class Object implements ArrayAccess, Arrayable
     protected $edges = [];
 
     /**
+     * @var mixed
+     */
+    protected $relationship;
+
+    /**
      * @param array $attributes
      */
     public function __construct($attributes = [])
@@ -257,6 +262,14 @@ class Object implements ArrayAccess, Arrayable
     }
 
     /**
+     * @param mixed $relationship
+     */
+    public function setRelationship($relationship)
+    {
+        $this->relationship = $relationship;
+    }
+
+    /**
      * @param string $object
      * @param string $relation
      * @param string $edge
@@ -285,6 +298,9 @@ class Object implements ArrayAccess, Arrayable
      */
     public function toArray()
     {
+        if (is_array($this->relationship))
+            return array_merge($this->attributes, $this->relationship);
+
         return $this->attributes;
     }
 
