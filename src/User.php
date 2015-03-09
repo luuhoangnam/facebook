@@ -15,13 +15,13 @@ use Illuminate\Support\Collection;
  */
 class User extends Profile
 {
+
     /**
      * @return EdgeOut
      */
     public function accounts()
     {
         $options = [
-            'cast'   => Edge::COLLECTION,
             'saving' => [
                 'relation' => ['access_token', 'perms'],
                 'end'      => ['id', 'name', 'category'],
