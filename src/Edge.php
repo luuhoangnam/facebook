@@ -285,6 +285,9 @@ class Edge
         return new Query($client, $statement);
     }
 
+    /**
+     * @return $this
+     */
     public function sync()
     {
         $results = $this->fetch();
@@ -307,6 +310,8 @@ class Edge
             if ($relationProperties)
                 $this->createUniqueRelationship($relationProperties);
         }
+
+        return $this;
     }
 
     /**
