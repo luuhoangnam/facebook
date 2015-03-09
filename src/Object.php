@@ -263,7 +263,7 @@ class Object implements ArrayAccess, Arrayable
      * @param string $direction
      * @param array  $options
      *
-     * @return EdgeOut
+     * @return EdgeOut|EdgeIn
      *
      */
     protected function hasMany($object, $relation, $edge = null, $direction = Edge::OUT, $options = [])
@@ -273,6 +273,9 @@ class Object implements ArrayAccess, Arrayable
 
             $edge = $caller['function'];
         }
+
+        if ( ! isset($options['cast']))
+            $options['cast'] = Edge::COLLECTION;
 
         return $this->makeEdge($object, $relation, $edge, $direction, $options);
     }
@@ -651,6 +654,9 @@ class Object implements ArrayAccess, Arrayable
 
             $edge = $caller['function'];
         }
+
+        if ( ! isset($options['cast']))
+            $options['cast'] = Edge::SINGLE;
 
         return $this->makeEdge($object, $relation, $edge, $direction, $options);
     }
