@@ -716,4 +716,16 @@ class Object implements ArrayAccess, Arrayable
 
         return $this->edges[$method] = $edge->get();
     }
+
+    /**
+     * @param $event
+     */
+    public function unsetEvent($event)
+    {
+        if (isset(static::$dispatcher)) {
+            $name = get_called_class();
+            
+            static::$dispatcher->forget("namest.facebook.{$event}: {$name}");
+        }
+    }
 }
