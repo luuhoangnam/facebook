@@ -16,10 +16,24 @@ class Post extends Object
     protected $fields = [
         'id',
         'from' => ['id', 'name', 'category'],
+        'type',
         'message',
         'created_time',
         'updated_time',
     ];
+
+    /**
+     * @param string $profile Profile class
+     *
+     * @return EdgeOut
+     */
+    public function publisher($profile)
+    {
+        if ( ! (new $profile) instanceof Profile)
+            throw new \InvalidArgumentException("[{$profile}] class must be inheritance from Namest\\Facebook\\Profile");
+
+        return $this->belongsTo($profile, 'PUBLISHED', null, Edge::OUT);
+    }
 
     /**
      * @return EdgeOut
@@ -65,7 +79,7 @@ class Post extends Object
             'message',
             'can_remove',
             'can_hide',
-            'parent' => ['id'],
+            'can_like',
         ];
     }
 
@@ -74,33 +88,21 @@ class Post extends Object
      */
     public function hydrateFromField($data)
     {
-        $client      = $this->getClient();
-        $profileType = $client->guestProfileTypeFromData($data);
+        if ( ! in_array('from', $this->fields) && ! array_key_exists('from', $this->fields))
+            throw new \LogicException("From fields must be provided");
 
-        switch ($profileType) {
-            case Profile::APPLICATION:
-                $profile = new Application;
-                break;
-            case Profile::GROUP:
-                $profile = new Group;
-                break;
-            case Profile::EVENT:
-                $profile = new Event;
-                break;
-            case Profile::PAGE:
-                $profile = new Page;
-                break;
-            case Profile::USER:
-            default:
-                $profile = new User;
-        }
+        $client  = $this->getClient();
+        $profile = $client->newProfileFromData($data);
 
         /** @var Profile $profile */
-        $profile = $profile->setId($data->id)->sync();
+        $profile = $profile->fill($data)->sync();
 
         $this->saved(function () use ($profile) {
             // Make edge relation
+            // (profile:Profile)-[:PUBLISH]->(post:Post)-[:ON]->(page:Page)
+            $this->publisher(get_class($profile))->save($profile);
 
+            $this->unsetEvent('saved');
         });
     }
 }
