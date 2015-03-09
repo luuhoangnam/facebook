@@ -266,4 +266,34 @@ class Client
 
         return Profile::USER;
     }
+
+    /**
+     * @param mixed $data
+     *
+     * @return Application|Event|Group|Page|User
+     */
+    public function newProfileFromData($data)
+    {
+        $profileType = $this->guestProfileTypeFromData($data);
+
+        switch ($profileType) {
+            case Profile::APPLICATION:
+                $profile = new Application;
+                break;
+            case Profile::GROUP:
+                $profile = new Group;
+                break;
+            case Profile::EVENT:
+                $profile = new Event;
+                break;
+            case Profile::PAGE:
+                $profile = new Page;
+                break;
+            case Profile::USER:
+            default:
+                $profile = new User;
+        }
+
+        return $profile;
+    }
 }
