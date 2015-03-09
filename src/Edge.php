@@ -247,9 +247,11 @@ class Edge
 
             $properties = $node->getProperties();
 
-            $properties['relationship'] = $relationship->getProperties();
+            /** @var Object $object */
+            $object = new $class($properties);
+            $object->setRelationship($relationship->getProperties());
 
-            return new $class($properties);
+            return $object;
         }
 
         // Cast to collection
@@ -261,10 +263,13 @@ class Edge
             /** @var Relationship $relationship */
             $relationship = $result['relation'];
 
-            $properties['relationship'] = $relationship->getProperties();
+            $endClass = get_class($this->end);
 
-            $endClass     = get_class($this->end);
-            $collection[] = new $endClass($properties);
+            /** @var Object $object */
+            $object = new $endClass($properties);
+            $object->setRelationship($relationship->getProperties());
+
+            $collection[] = $object;
         }
 
         return $collection;
@@ -292,24 +297,31 @@ class Edge
     {
         $results = $this->fetch();
 
-        $saving = $this->options['saving'];
+        $saving = $this->getSavingOptions();
 
         foreach ($results as $result) {
             $relationProperties = [];
 
             foreach ((array) $result as $key => $value) {
-                if (in_array($key, $saving['end']))
+                if ( ! $saving) {
+                    $this->end->setAttribute($key, $value);
+                    continue;
+                }
+
+                if (array_key_exists('end', $saving) && in_array($key, $saving['end']))
                     $this->end->setAttribute($key, $value);
 
-                if (in_array($key, $saving['relation']))
+                if (array_key_exists('relation', $saving) && in_array($key, $saving['relation']))
                     $relationProperties[$key] = $value;
             }
 
             $this->end->save();
 
-            if ($relationProperties)
-                $this->createUniqueRelationship($relationProperties);
+            $this->createUniqueRelationship($relationProperties);
         }
+
+        $class     = get_class($this->end);
+        $this->end = new $class();
 
         return $this;
     }
@@ -395,8 +407,22 @@ class Edge
 
         $results = $this->getCypherQuery($queryString)->getResultSet();
 
+        if ($results->count() === 0)
+            return null;
+
         $relationship = $results->current()['relation'];
 
         return $relationship;
+    }
+
+    /**
+     * @return array
+     */
+    protected function getSavingOptions()
+    {
+        if (array_key_exists('saving', $this->options))
+            return $this->options['saving'];
+
+        return [];
     }
 }
