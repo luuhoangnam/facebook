@@ -11,14 +11,6 @@ namespace Namest\Facebook;
  */
 class Page extends Profile
 {
-    /**
-     * @return EdgeOut
-     */
-    public function posts()
-    {
-        return $this->hasMany(Post::class, 'OWN');
-    }
-
     protected $fields = [
         'id',
         'about',
@@ -28,4 +20,27 @@ class Page extends Profile
         'website',
         'phone',
     ];
+
+    /**
+     * @return EdgeOut
+     */
+    public function posts()
+    {
+        return $this->hasMany(Post::class, 'OWN', 'posts', Edge::IN);
+    }
+
+    /**
+     * @return array
+     */
+    public function getFetchPostsFields()
+    {
+        return [
+            'id',
+            'from' => ['id', 'name', 'category'],
+            'type',
+            'message',
+            'created_time',
+            'updated_time',
+        ];
+    }
 }
