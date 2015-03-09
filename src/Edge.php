@@ -75,7 +75,7 @@ class Edge
         if ( ! in_array($this->direction, [Edge::IN, Edge::OUT]))
             throw new Exception("Edge direction must be set via class inheritance");
 
-        if ( ! in_array('cast', $options))
+        if ( ! array_key_exists('cast', $options))
             $options['cast'] = Edge::SINGLE;
 
         if ( ! in_array($options['cast'], [Edge::SINGLE, Edge::COLLECTION]))
