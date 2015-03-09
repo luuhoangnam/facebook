@@ -41,7 +41,7 @@ class Comment extends Object
      */
     public function comments()
     {
-        return $this->hasMany(Comment::class, 'ON', 'comments', Edge::IN);
+        return $this->hasMany(Comment::class, 'ON', 'comments', Edge::OUT);
     }
 
     /**
