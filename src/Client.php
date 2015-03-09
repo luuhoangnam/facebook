@@ -197,7 +197,7 @@ class Client
      */
     public static function defaultToken($token)
     {
-        static::setToken($token);
+        static::$token = $token;
     }
 
     /**
