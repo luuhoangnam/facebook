@@ -8,7 +8,6 @@ use Everyman\Neo4j\Client as Neo4jClient;
 use Everyman\Neo4j\Cypher\Query;
 use Everyman\Neo4j\Node;
 use Illuminate\Contracts\Events\Dispatcher;
-use Illuminate\Contracts\Events\DispatcΩher;
 use Illuminate\Contracts\Support\Arrayable;
 use LogicException;
 
