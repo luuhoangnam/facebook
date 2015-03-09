@@ -123,34 +123,26 @@ class Comment extends Object
      */
     public function hydrateFromField($data)
     {
-        $client      = $this->getClient();
-        $profileType = $client->guestProfileTypeFromData($data);
-
-        switch ($profileType) {
-            case Profile::APPLICATION:
-                $profile = new Application;
-                break;
-            case Profile::GROUP:
-                $profile = new Group;
-                break;
-            case Profile::EVENT:
-                $profile = new Event;
-                break;
-            case Profile::PAGE:
-                $profile = new Page;
-                break;
-            case Profile::USER:
-            default:
-                $profile = new User;
-        }
+        $client  = $this->getClient();
+        $profile = $client->newProfileFromData($data);
 
         /** @var Profile $profile */
-        $profile = $profile->setId($data->id)->sync();
+        $properties = [];
+        foreach ((array) $data as $key => $value) {
+            if ($key === 'category_list')
+                continue;
+
+            $properties[$key] = $value;
+        }
+
+        $profile->fill($properties)->save();
 
         $this->saved(function () use ($profile) {
             // TODO Make edge relation
+            // (profile:Profile)-[:LEAVE]->(comment:Comment)-[:ON]->(post:Post)
+            $this->owner(get_class($profile))->save($profile);
 
+            $this->unsetEvent('saved');
         });
     }
-
 }
