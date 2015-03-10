@@ -2,8 +2,12 @@
 
 namespace Namest\Facebook;
 
+use Illuminate\Support\Collection;
+
 /**
  * Class Page
+ *
+ * @property-read Collection posts
  *
  * @author  Nam Hoang Luu <nam@mbearvn.com>
  * @package Namest\Facebook
