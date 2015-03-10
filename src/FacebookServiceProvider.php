@@ -43,6 +43,6 @@ class FacebookServiceProvider extends ServiceProvider
         $appSecret = $this->app['config']->get('facebook.app_secret');
 
         FacebookSession::setDefaultApplication($appId, $appSecret);
-        Client::defaultToken('CAAXDftrRQX8BALcDDZCSfcONZBs76rc1ZAYpJtRs0tqaSwFnGHzCuk2Uqcx9bhpS4Upde0ZBm58azPdR0SEwX8E9PebzuU4BZAgEtiaHvnvWIJbU6WhlwKiaF5P4CpsdrtNGdZCGqrijfYiSNhibJ8ZBK4GMkug4rCClVN9mgapRQQkYdNTlIhWBDiDDLbsPjjtZCPKZAioU2AnIZBiPCvfTFAZAJ6hmj90g4cZD');
+        Client::defaultToken('CAAXDftrRQX8BAFZBybHMp5NJs5H3y6gtjbMEsZCol7z0zPfWpzZCg4l5jOUrnnELuPQuSNz2b3m4DLXmqgf4iHH2ddRUIfQZBuZAJgOuvMv6ZA6ZCqmodqucnnQ9tQI0mRq6cdV5WHHQhsMJHJvgKcfD6QgiWwimewTQlrc15vq7XU4dviREUeNhJcjgDCmZAgZCNCJAWBEyZBGEJlIRdZAvZCB1AA5448ZBSXGUZD');
     }
 }
