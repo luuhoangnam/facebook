@@ -6,6 +6,7 @@ namespace Namest\Facebook;
  * Class Comment
  *
  * @property Profile owner
+ * @property string  message
  *
  * @author  Nam Hoang Luu <nam@mbearvn.com>
  * @package Namest\Facebook
