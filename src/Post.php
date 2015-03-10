@@ -96,7 +96,8 @@ class Post extends Object
         $profile = $client->newProfileFromData($data);
 
         /** @var Profile $profile */
-        $profile = $profile->fill($data)->sync();
+        $attributes = (array) $data;
+        $profile    = $profile->fill($attributes)->sync();
 
         $this->saved(function () use ($profile) {
             // Make edge relation
