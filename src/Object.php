@@ -7,6 +7,7 @@ use Closure;
 use Everyman\Neo4j\Client as Neo4jClient;
 use Everyman\Neo4j\Cypher\Query;
 use Everyman\Neo4j\Node;
+use Everyman\Neo4j\PropertyContainer;
 use Illuminate\Contracts\Events\Dispatcher;
 use Illuminate\Contracts\Support\Arrayable;
 use LogicException;
@@ -732,5 +733,13 @@ class Object implements ArrayAccess, Arrayable
 
             static::$dispatcher->forget("namest.facebook.{$event}: {$name}");
         }
+    }
+
+    /**
+     * @return PropertyContainer
+     */
+    public function deleteNode()
+    {
+        return $this->getNode()->delete();
     }
 }
