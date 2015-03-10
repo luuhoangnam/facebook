@@ -136,7 +136,8 @@ class Object implements ArrayAccess, Arrayable
      */
     public function get()
     {
-        $this->findNode();
+        $this->node = $this->findNode();
+
         $properties = $this->node->getProperties();
 
         $this->fill($properties);
@@ -306,6 +307,7 @@ class Object implements ArrayAccess, Arrayable
 
     /**
      * @return Node
+     * @throws \Exception
      */
     public function save()
     {
@@ -313,6 +315,9 @@ class Object implements ArrayAccess, Arrayable
             return false;
 
         $result = $this->performSave();
+
+        if ( ! $result->hasId())
+            throw new \Exception("Can not save object");
 
         if ($result)
             $this->fireEvent('saved', false);
@@ -724,7 +729,7 @@ class Object implements ArrayAccess, Arrayable
     {
         if (isset(static::$dispatcher)) {
             $name = get_called_class();
-            
+
             static::$dispatcher->forget("namest.facebook.{$event}: {$name}");
         }
     }

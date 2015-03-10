@@ -323,6 +323,7 @@ class Edge
         $class     = get_class($this->end);
         $this->end = new $class();
 
+
         return $this;
     }
 
@@ -341,6 +342,9 @@ class Edge
         $this->end->fill($object->toArray());
 
         $relationship = $this->createUniqueRelationship();
+
+        if (is_null($relationship))
+            throw new Exception("Can not create relationship.");
 
         if ($this->getDirection() === Edge::IN)
             $properties = $relationship->getEndNode()->getProperties();
@@ -378,8 +382,8 @@ class Edge
         $startNodeLabel = $this->start->getLabel();
         $endNodeLabel   = $this->end->getLabel();
         $relation       = $this->relation;
-        $startNodeId    = $this->start->id;
-        $endNodeId      = $this->end->id;
+        $startNodeId    = trim($this->start->id);
+        $endNodeId      = trim($this->end->id);
         $direction      = $this->getDirection();
 
         $queryString = "MATCH (start:{$startNodeLabel}),(end:{$endNodeLabel})

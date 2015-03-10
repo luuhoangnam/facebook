@@ -77,6 +77,7 @@ class Post extends Object
             'id',
             'from',
             'message',
+            'parent' => ['id', 'from', 'message', 'can_remove', 'can_hide', 'can_like'],
             'can_remove',
             'can_hide',
             'can_like',

@@ -5,6 +5,8 @@ namespace Namest\Facebook;
 /**
  * Class Comment
  *
+ * @property Profile owner
+ *
  * @author  Nam Hoang Luu <nam@mbearvn.com>
  * @package Namest\Facebook
  *
@@ -42,6 +44,14 @@ class Comment extends Object
     public function comments()
     {
         return $this->hasMany(Comment::class, 'ON', 'comments', Edge::OUT);
+    }
+
+    /**
+     * @return EdgeIn
+     */
+    public function parent()
+    {
+        return $this->belongsTo(Comment::class, 'HAS_PARENT', null, Edge::IN);
     }
 
     /**
@@ -141,6 +151,26 @@ class Comment extends Object
             // TODO Make edge relation
             // (profile:Profile)-[:LEAVE]->(comment:Comment)-[:ON]->(post:Post)
             $this->owner(get_class($profile))->save($profile);
+
+            $this->unsetEvent('saved');
+        });
+    }
+
+    /**
+     * @param mixed $data
+     */
+    public function hydrateParentField($data)
+    {
+        $properties = (array) $data;
+
+        $this->saved(function () use ($properties) {
+            // TODO Make edge relation
+            // (profile:Profile)-[:LEAVE]->(comment:Comment)-[:ON]->(post:Post)
+
+            $comment = new Comment($properties);
+            $comment->save();
+
+            $this->parent()->save($comment);
 
             $this->unsetEvent('saved');
         });
