@@ -85,12 +85,12 @@ class Receiver
     private function processCommentChanges($value)
     {
         $commentId = $value->comment_id;
-
+dd($value);
         switch ($value->verb) {
             case 'add':
                 $postId = $value->parent_id;
 
-                $post    = new Post(['id' => $postId]);
+                $post    = (new Post(['id' => $postId]))->sync();
                 $comment = (new Comment(['id' => $commentId]))->sync();
 
                 $post->comments()->save($comment);
