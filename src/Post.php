@@ -9,6 +9,7 @@ namespace Namest\Facebook;
  * @package Namest\Facebook
  *
  * @property-read array comments
+ * @property string     message
  *
  */
 class Post extends Object
