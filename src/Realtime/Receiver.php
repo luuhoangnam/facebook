@@ -40,7 +40,7 @@ class Receiver
     {
         /** @noinspection PhpUndefinedFunctionInspection */
         $verifyToken = $verifyToken ?: env('FACEBOOK_VERIFY_TOKEN');
-
+        dd($this->request->all());
         /** @noinspection PhpUnusedLocalVariableInspection */
         $mode         = $this->request->get('hub_mode');
         $challenge    = $this->request->get('hub_challenge');
