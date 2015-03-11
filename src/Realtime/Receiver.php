@@ -47,7 +47,7 @@ class Receiver
         $verify_token = $this->request->get('hub_verify_token');
 
         if ($verify_token != $verifyToken)
-            throw new HttpException(401, 'Not Authorized!');
+            throw new HttpException(401, 'Not Authorized!!!');
 
         return new Response($challenge, 200);
     }
