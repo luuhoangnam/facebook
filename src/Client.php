@@ -203,7 +203,7 @@ class Client
     /**
      * @param string $token
      */
-    public function setToken($token)
+    public static function setToken($token)
     {
         static::$token = $token;
     }
