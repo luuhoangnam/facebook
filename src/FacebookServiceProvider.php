@@ -3,6 +3,7 @@
 namespace Namest\Facebook;
 
 use Facebook\FacebookSession;
+use Illuminate\Contracts\Events\Dispatcher;
 use Illuminate\Support\ServiceProvider;
 
 /**
@@ -34,7 +35,7 @@ class FacebookServiceProvider extends ServiceProvider
     {
         $this->registerFacebookServices();
 
-        Object::setEventDispatcher($this->app['events']);
+        Object::setEventDispatcher($this->getEventDispatcher());
     }
 
     protected function registerFacebookServices()
@@ -44,5 +45,13 @@ class FacebookServiceProvider extends ServiceProvider
 
         FacebookSession::setDefaultApplication($appId, $appSecret);
         Client::defaultToken('CAAXDftrRQX8BAMjZBZBBZBhM8hUXQ8pqWi3EkZCZAQi63EZBBNW20TdYfBvCFqD22nyyDGqrOwvZBvmZAbmpruqgrrM1ZARA0GqxGn3czGQus2m9CZA2ZADdbm43TSxbxiQ2rNUVcN46RqQZBMJo8R6ICKtu5Tffhssh0pNEf40JoFRuMcdA3ZCe7z5N0QZArKZBcJ0IbEdZByIQJTTYBQyNwLN3ZCZBvMvZBEZAk6rUwiUZD');
+    }
+
+    /**
+     * @return Dispatcher
+     */
+    protected function getEventDispatcher()
+    {
+        return $this->app['events'];
     }
 }
