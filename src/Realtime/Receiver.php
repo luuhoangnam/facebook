@@ -4,6 +4,7 @@ namespace Namest\Facebook\Realtime;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Log\Writer;
 use Namest\Facebook\Comment;
 use Namest\Facebook\Page;
 use Namest\Facebook\Post;
@@ -24,11 +25,18 @@ class Receiver
     private $request;
 
     /**
-     * @param Request $request
+     * @var Writer
      */
-    public function __construct(Request $request)
+    private $log;
+
+    /**
+     * @param Request $request
+     * @param Writer  $log
+     */
+    public function __construct(Request $request, Writer $log)
     {
         $this->request = $request;
+        $this->log     = $log;
     }
 
     /**
@@ -85,14 +93,29 @@ class Receiver
                 $comment = (new Comment(['id' => $commentId]))->sync();
 
                 $post->comments()->save($comment);
+
+                $this->log->info('New comment has been added', [
+                    'post'    => $postId,
+                    'comment' => $commentId,
+                    'message' => $comment->message
+                ]);
                 break;
             case 'edited':
                 $comment = new Comment(['id' => $commentId]);
                 $comment->sync();
+
+                $this->log->info('Comment has been edited', [
+                    'comment' => $commentId,
+                    'message' => $comment->message
+                ]);
                 break;
             case 'remove':
                 $comment = new Comment(['id' => $commentId]);
                 $comment->getNode()->delete();
+
+                $this->log->info('Comment has been removed', [
+                    'comment' => $commentId,
+                ]);
                 break;
             default:
                 throw new \Exception("Unhandle comment [{$commentId}] change [{$value->verb}]");
@@ -115,6 +138,12 @@ class Receiver
                 $post   = (new Post(['id' => $postId]))->sync();
 
                 $page->posts()->save($post);
+
+                $this->log->info('New status has been added', [
+                    'page'    => $pageId,
+                    'post'    => $postId,
+                    'message' => $post->message,
+                ]);
                 break;
             default:
                 throw new \Exception("Unhandle comment [{$value->post_id}] change [{$value->verb}]");
@@ -133,6 +162,10 @@ class Receiver
                 $id   = $value->post_id;
                 $post = new Post(['id' => $id]);
                 $post->deleteNode();
+
+                $this->log->info('Post has been removed', [
+                    'post' => $id,
+                ]);
                 break;
             default:
                 throw new \Exception("Unhandle comment [{$value->post_id}] change [{$value->verb}]");
