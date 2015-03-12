@@ -11,6 +11,7 @@ use Everyman\Neo4j\PropertyContainer;
 use Illuminate\Contracts\Events\Dispatcher;
 use Illuminate\Contracts\Support\Arrayable;
 use LogicException;
+use Namest\Facebook\Database\Neo;
 
 /**
  * Class Object
@@ -147,12 +148,15 @@ class Object implements ArrayAccess, Arrayable
     }
 
     /**
+     * @param string|array $fields
+     *
      * @return $this
+     * @throws \Exception
      */
-    public function sync()
+    public function sync($fields = [])
     {
         // Fetch
-        $attributes = (array) $this->fetch();
+        $attributes = (array) $this->fetch($fields);
 
         // Set
         $this->fill($attributes);
@@ -164,14 +168,19 @@ class Object implements ArrayAccess, Arrayable
     }
 
     /**
+     * @param string|array $fields
+     *
      * @return \StdClass
      */
-    public function fetch()
+    public function fetch($fields = [])
     {
         if ( ! is_string($this->id) || $this->id == '')
             throw new \LogicException("Facebook ID need to be set before fetch information.");
 
-        $parameters = $this->fields ? ['fields' => $this->fields] : [];
+        $parameters = [];
+        $fields     = $fields ?: $this->fields ?: [];
+
+        $parameters['fields'] = $fields;
 
         return $this->getClient()->get($this->id, $parameters);
     }
