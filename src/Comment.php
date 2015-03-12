@@ -18,6 +18,7 @@ class Comment extends Object
         'id',
         'from',
         'message',
+        'is_hidden',
         'can_hide',
         'can_like',
         'can_remove',
