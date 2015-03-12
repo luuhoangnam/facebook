@@ -8,6 +8,7 @@ use Everyman\Neo4j\Client as Neo4jClient;
 use Everyman\Neo4j\Cypher\Query;
 use Everyman\Neo4j\Node;
 use Everyman\Neo4j\PropertyContainer;
+use Everyman\Neo4j\Relationship;
 use Illuminate\Contracts\Events\Dispatcher;
 use Illuminate\Contracts\Support\Arrayable;
 use LogicException;
@@ -752,6 +753,13 @@ class Object implements ArrayAccess, Arrayable
      */
     public function deleteNode()
     {
+        $relationships = $this->getNode()->getRelationships();
+
+        foreach ($relationships as $relationship) {
+            /** @var Relationship $relationship */
+            $relationship->delete();
+        }
+
         return $this->getNode()->delete();
     }
 }
