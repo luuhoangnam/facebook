@@ -749,17 +749,16 @@ class Object implements ArrayAccess, Arrayable
     }
 
     /**
-     * @return PropertyContainer
+     * @return void
      */
     public function deleteNode()
     {
-        $relationships = $this->getNode()->getRelationships();
+        $label       = $this->getLabel();
+        $queryString = "MATCH (node:{$label})
+                        OPTIONAL MATCH (node)-[relationship]-()
+                        WHERE node.id = \"{$this->id}\"
+                        DELETE relationship,node";
 
-        foreach ($relationships as $relationship) {
-            /** @var Relationship $relationship */
-            $relationship->delete();
-        }
-
-        return $this->getNode()->delete();
+        $this->getCypherQuery($queryString)->getResultSet();
     }
 }
