@@ -113,6 +113,9 @@ class Receiver
                 break;
             case 'remove':
                 $comment = (new Comment(['id' => $commentId]))->get();
+                if (is_null($comment))
+                    return;
+
                 $comment->getNode()->delete();
 
                 $this->log->info('Comment has been removed', [

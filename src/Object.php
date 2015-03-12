@@ -140,6 +140,9 @@ class Object implements ArrayAccess, Arrayable
     {
         $this->node = $this->findNode();
 
+        if (is_null($this->node))
+            return null;
+
         $properties = $this->node->getProperties();
 
         $this->fill($properties);
