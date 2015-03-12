@@ -65,6 +65,8 @@ class Receiver
      */
     public function receive()
     {
+        ini_set('always_populate_raw_post_data', - 1);
+
         $content = file_get_contents('php://input');
 
         $updates = json_decode($content);
