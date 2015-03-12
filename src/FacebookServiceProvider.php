@@ -68,15 +68,21 @@ class FacebookServiceProvider extends ServiceProvider
         // Example:
         // https://54fdcdd7a1025:BwWPxfDikLh275uL9Oht8mMJoRL7ckREws0FEyd6@neo-54fdcd4fa1064-364459c455.do-stories.graphstory.com:7474
 
-        $transport = env('NEO4J_HOST');
-        $port      = env('NEO4J_PORT');
-        $username  = env('NEO4J_USERNAME');
-        $password  = env('NEO4J_PASSWORD');
+        $configuration = $this->app['config']->get('facebook.connections.neo4j');
 
-        $client = new NeoClient($transport, $port);
-        $client->getTransport()
-               ->useHttps()
-               ->setAuth($username, $password);
+        $host     = $configuration['host'];
+        $port     = $configuration['port'];
+        $https    = $configuration['https'];
+        $username = $configuration['username'];
+        $password = $configuration['password'];
+
+        $client    = new NeoClient($host, $port);
+        $transport = $client->getTransport();
+
+        if ($https)
+            $transport->useHttps()->setAuth($username, $password);
+
+        $client->setTransport($transport);
 
         Neo::setClient($client);
     }
