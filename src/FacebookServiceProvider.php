@@ -6,6 +6,10 @@ use Facebook\FacebookSession;
 use Illuminate\Contracts\Events\Dispatcher;
 use Illuminate\Support\ServiceProvider;
 use Everyman\Neo4j\Client as NeoClient;
+use Namest\Facebook\Console\Comment as CommentCommand;
+use Namest\Facebook\Console\Page as PageCommand;
+use Namest\Facebook\Console\Post as PostCommand;
+use Namest\Facebook\Console\User as UserCommand;
 use Namest\Facebook\Database\Neo;
 
 /**
@@ -26,6 +30,29 @@ class FacebookServiceProvider extends ServiceProvider
         $this->publishes([
             __DIR__ . '/../config/facebook.php' => config_path('facebook.php')
         ], 'config');
+
+        $this->app->singleton('namest.facebook.console.user', function () {
+            return $this->app->make(UserCommand::class);
+        });
+
+        $this->app->singleton('namest.facebook.console.page', function () {
+            return $this->app->make(PageCommand::class);
+        });
+
+        $this->app->singleton('namest.facebook.console.post', function () {
+            return $this->app->make(PostCommand::class);
+        });
+
+        $this->app->singleton('namest.facebook.console.comment', function () {
+            return $this->app->make(CommentCommand::class);
+        });
+
+        $this->commands([
+            'namest.facebook.console.user',
+            'namest.facebook.console.page',
+            'namest.facebook.console.post',
+            'namest.facebook.console.comment',
+        ]);
     }
 
     /**
