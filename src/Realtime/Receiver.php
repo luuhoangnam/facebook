@@ -75,6 +75,8 @@ class Receiver
             return null; // Do not handle other situations
 
         $this->processEntries(object_get($updates, 'entry'));
+
+        return new Response('Success', 200);
     }
 
     /**
@@ -102,8 +104,7 @@ class Receiver
                 ]);
                 break;
             case 'edited':
-                $comment = new Comment(['id' => $commentId]);
-                $comment->sync();
+                $comment = (new Comment(['id' => $commentId]))->sync();
 
                 $this->log->info('Comment has been edited', [
                     'comment' => $commentId,
@@ -111,7 +112,7 @@ class Receiver
                 ]);
                 break;
             case 'remove':
-                $comment = new Comment(['id' => $commentId]);
+                $comment = (new Comment(['id' => $commentId]))->get();
                 $comment->getNode()->delete();
 
                 $this->log->info('Comment has been removed', [
