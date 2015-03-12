@@ -118,7 +118,7 @@ class Receiver
                 if (is_null($comment))
                     return;
 
-                $comment->getNode()->delete();
+                $comment->deleteNode();
 
                 $this->log->info('Comment has been removed', [
                     'comment' => $commentId,

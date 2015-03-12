@@ -749,15 +749,19 @@ class Object implements ArrayAccess, Arrayable
     }
 
     /**
-     * @return void
+     * @return PropertyContainer
      */
     public function deleteNode()
     {
-        $queryString = "MATCH (node)
-                        WHERE node.id = \"{$this->id}\"
-                        OPTIONAL MATCH (node)-[relationship]-()
-                        DELETE relationship,node";
-dd($queryString);
-        $this->getCypherQuery($queryString)->getResultSet();
+        $node = $this->getNode();
+
+        $relationships = $node->getRelationships();
+
+        foreach ($relationships as $relationship) {
+            /** @var Relationship $relationship */
+            $relationship->delete();
+        }
+
+        return $node->delete();
     }
 }
