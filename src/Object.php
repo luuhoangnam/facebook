@@ -331,7 +331,7 @@ class Object implements ArrayAccess, Arrayable
      */
     public function getNode()
     {
-        return $this->node ?: new Node(new Neo4jClient);
+        return $this->node ?: new Node(Neo::getClient());
     }
 
     /**
