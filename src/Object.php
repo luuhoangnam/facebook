@@ -757,7 +757,7 @@ class Object implements ArrayAccess, Arrayable
                         WHERE node.id = \"{$this->id}\"
                         OPTIONAL MATCH (node)-[relationship]-()
                         DELETE relationship,node";
-
+dd($queryString);
         $this->getCypherQuery($queryString)->getResultSet();
     }
 }
