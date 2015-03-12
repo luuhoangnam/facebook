@@ -5,7 +5,8 @@ namespace Namest\Facebook;
 use Facebook\FacebookSession;
 use Illuminate\Contracts\Events\Dispatcher;
 use Illuminate\Support\ServiceProvider;
-use Everyman\Neo4j\Client as Neo;
+use Everyman\Neo4j\Client as NeoClient;
+use Namest\Facebook\Database\Neo;
 
 /**
  * Class FacebookServiceProvider
@@ -72,10 +73,11 @@ class FacebookServiceProvider extends ServiceProvider
         $username  = env('NEO4J_USERNAME');
         $password  = env('NEO4J_PASSWORD');
 
-        $client = new Neo($transport, $port);
+        $client = new NeoClient($transport, $port);
         $client->getTransport()
                ->useHttps()
                ->setAuth($username, $password);
 
+        Neo::setClient($client);
     }
 }
