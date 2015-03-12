@@ -753,10 +753,9 @@ class Object implements ArrayAccess, Arrayable
      */
     public function deleteNode()
     {
-        $label       = $this->getLabel();
-        $queryString = "MATCH (node:{$label})
-                        OPTIONAL MATCH (node)-[relationship]-()
+        $queryString = "MATCH (node)
                         WHERE node.id = \"{$this->id}\"
+                        OPTIONAL MATCH (node)-[relationship]-()
                         DELETE relationship,node";
 
         $this->getCypherQuery($queryString)->getResultSet();
