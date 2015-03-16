@@ -298,13 +298,15 @@ class Client
     }
 
     /**
-     * @param null $shortLivedToken
+     * @param string $shortLivedToken
      *
      * @return string
      */
-    public function getLongLivedToken($shortLivedToken = null)
+    public static function getLongLivedToken($shortLivedToken = null)
     {
-        $shortLivedToken = $shortLivedToken ?: $this->getSession()->getToken();
+        $instance = new static;
+
+        $shortLivedToken = $shortLivedToken ?: $instance->getSession()->getToken();
 
         if ( ! $shortLivedToken)
             throw new \LogicException("Can not get long lived token until you specify short lived token.");
@@ -316,7 +318,7 @@ class Client
             'fb_exchange_token' => $shortLivedToken,
         ];
 
-        $response = $this->get('oauth/access_token', $parameters);
+        $response = $instance->get('oauth/access_token', $parameters);
 
         return $response['access_token'];
     }
