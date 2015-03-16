@@ -296,4 +296,28 @@ class Client
 
         return $profile;
     }
+
+    /**
+     * @param null $shortLivedToken
+     *
+     * @return string
+     */
+    public function getLongLivedToken($shortLivedToken = null)
+    {
+        $shortLivedToken = $shortLivedToken ?: $this->getSession()->getToken();
+
+        if ( ! $shortLivedToken)
+            throw new \LogicException("Can not get long lived token until you specify short lived token.");
+
+        $parameters = [
+            'grant_type'        => 'fb_exchange_token',
+            'client_id'         => env('FACEBOOK_APP_ID'),
+            'client_secret'     => env('FACEBOOK_APP_SECRET'),
+            'fb_exchange_token' => $shortLivedToken,
+        ];
+
+        $response = $this->get('oauth/access_token', $parameters);
+
+        return $response['access_token'];
+    }
 }
