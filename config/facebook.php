@@ -14,4 +14,9 @@ return [
             'https'    => env('NEO4J_HTTPS', false),
         ],
     ],
+    'model'            => [
+        'user'    => 'App\User',
+        'profile' => 'App\Profile',
+        'token'   => 'access_token',
+    ],
 ];
