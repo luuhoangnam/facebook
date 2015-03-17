@@ -2,6 +2,7 @@
 
 namespace Namest\Facebook\Realtime;
 
+use Illuminate\Contracts\Events\Dispatcher;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Log\Writer;
@@ -30,13 +31,20 @@ class Receiver
     private $log;
 
     /**
-     * @param Request $request
-     * @param Writer  $log
+     * @var Dispatcher
      */
-    public function __construct(Request $request, Writer $log)
+    private $events;
+
+    /**
+     * @param Request    $request
+     * @param Dispatcher $events
+     * @param Writer     $log
+     */
+    public function __construct(Request $request, Dispatcher $events, Writer $log)
     {
         $this->request = $request;
         $this->log     = $log;
+        $this->events  = $events;
     }
 
     /**
@@ -99,6 +107,8 @@ class Receiver
 
                 $post->comments()->save($comment);
 
+                $this->events->fire('facebook.comment.added', [$commentId, $postId]);
+
                 $this->log->info('New comment has been added', [
                     'post'    => $postId,
                     'comment' => $commentId,
@@ -112,6 +122,8 @@ class Receiver
                     'comment' => $commentId,
                     'message' => $comment->message
                 ]);
+
+                $this->events->fire('facebook.comment.edited', [$commentId]);
                 break;
             case 'remove':
                 $comment = (new Comment(['id' => $commentId]))->get();
@@ -120,9 +132,9 @@ class Receiver
 
                 $comment->deleteNode();
 
-                $this->log->info('Comment has been removed', [
-                    'comment' => $commentId,
-                ]);
+                $this->events->fire('facebook.comment.removed', [$commentId]);
+
+                $this->log->info('Comment has been removed', ['comment' => $commentId,]);
                 break;
             default:
                 throw new \Exception("Unhandle comment [{$commentId}] change [{$value->verb}]");
@@ -141,10 +153,13 @@ class Receiver
         switch ($value->verb) {
             case 'add':
                 $postId = $value->post_id;
-                $page   = (new Page(['id' => $pageId]))->sync();
-                $post   = (new Post(['id' => $postId]))->sync();
+
+                $page = (new Page(['id' => $pageId]))->sync();
+                $post = (new Post(['id' => $postId]))->sync();
 
                 $page->posts()->save($post);
+
+                $this->events->fire('facebook.post.added', [$postId, $pageId]);
 
                 $this->log->info('New status has been added', [
                     'page'    => $pageId,
@@ -166,13 +181,14 @@ class Receiver
     {
         switch ($value->verb) {
             case 'remove':
-                $id   = $value->post_id;
+                $id = $value->post_id;
+
                 $post = new Post(['id' => $id]);
                 $post->deleteNode();
 
-                $this->log->info('Post has been removed', [
-                    'post' => $id,
-                ]);
+                $this->events->fire('facebook.post.removed', [$id]);
+
+                $this->log->info('Post has been removed', ['post' => $id]);
                 break;
             default:
                 throw new \Exception("Unhandle comment [{$value->post_id}] change [{$value->verb}]");
