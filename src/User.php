@@ -11,10 +11,27 @@ use Illuminate\Support\Collection;
  * @package Namest\Facebook
  *
  * @property-read Collection accounts
+ * @property string          avatar
  *
  */
 class User extends Profile
 {
+
+    protected $fields = [
+        // Public fields
+        'id',
+        'name',
+        'first_name',
+        'last_name',
+        'link',
+        'gender',
+        'locale',
+        'verified',
+        'timezone',
+        'updated_time',
+        'picture',
+        // Restrict fields
+    ];
 
     /**
      * @return EdgeOut
@@ -43,5 +60,21 @@ class User extends Profile
             'name',
             'id',
         ];
+    }
+
+    /**
+     * @param \StdClass $data
+     */
+    public function hydratePictureField($data)
+    {
+        $avatar = $data->data->url;
+
+        $this->saved(function () use ($avatar) {
+
+            $this->avatar = $avatar;
+            $this->save();
+
+            $this->unsetEvent('saved');
+        });
     }
 }
