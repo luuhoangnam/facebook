@@ -8,6 +8,7 @@ use Illuminate\Support\Collection;
  * Class Page
  *
  * @property-read Collection posts
+ * @property string          avatar
  *
  * @author  Nam Hoang Luu <nam@mbearvn.com>
  * @package Namest\Facebook
