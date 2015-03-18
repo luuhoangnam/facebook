@@ -62,4 +62,19 @@ class User extends Profile
         ];
     }
 
+    /**
+     * @param \StdClass $data
+     */
+    public function hydratePictureField($data)
+    {
+        $avatar = $data->data->url;
+
+        $this->saved(function () use ($avatar) {
+
+            $this->avatar = $avatar;
+            $this->save();
+
+            $this->unsetEvent('saved');
+        });
+    }
 }
