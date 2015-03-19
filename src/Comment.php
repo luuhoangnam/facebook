@@ -81,7 +81,7 @@ class Comment extends Object
     /**
      * @param string $message
      *
-     * @return string
+     * @return string|bool
      */
     public function comment($message)
     {
