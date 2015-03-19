@@ -11,7 +11,7 @@ use Illuminate\Support\Collection;
  * @package Namest\Facebook
  *
  * @property Collection comments
- * @property Collection page
+ * @property Page       page
  * @property string     message
  *
  */
