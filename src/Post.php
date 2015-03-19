@@ -2,13 +2,16 @@
 
 namespace Namest\Facebook;
 
+use Illuminate\Support\Collection;
+
 /**
  * Class Post
  *
  * @author  Nam Hoang Luu <nam@mbearvn.com>
  * @package Namest\Facebook
  *
- * @property-read array comments
+ * @property Collection comments
+ * @property Collection page
  * @property string     message
  *
  */
@@ -34,6 +37,14 @@ class Post extends Object
             throw new \InvalidArgumentException("[{$profile}] class must be inheritance from Namest\\Facebook\\Profile");
 
         return $this->belongsTo($profile, 'PUBLISHED', null, Edge::OUT);
+    }
+
+    /**
+     * @return EdgeOut
+     */
+    public function page()
+    {
+        return $this->belongsTo(Page::class, 'PUBLISHED', false, Edge::OUT);
     }
 
     /**
