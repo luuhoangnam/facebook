@@ -251,47 +251,50 @@ class Client
     }
 
     /**
-     * @param \StdClass $data
+     * @param array|\StdClass|Object $data
      *
      * @return string
      */
     public function guestProfileTypeFromData($data)
     {
-        if ( ! $data instanceof \StdClass)
-            throw new \InvalidArgumentException('Data must be an object.');
+        if ($data instanceof \StdClass)
+            $data = (array) $data;
 
-        if (property_exists($data, 'category')) {
+        if ($data instanceof Object)
+            $data = $data->toArray();
+
+        if (array_key_exists('category', $data))
             return Profile::PAGE;
-        }
 
         return Profile::USER;
     }
 
     /**
-     * @param mixed $data
+     * @param array|\StdClass|Object $data
+     * @param array                  $properties
      *
      * @return Application|Event|Group|Page|User
      */
-    public function newProfileFromData($data)
+    public function newProfileFromData($data, $properties = [])
     {
         $profileType = $this->guestProfileTypeFromData($data);
 
         switch ($profileType) {
             case Profile::APPLICATION:
-                $profile = new Application;
+                $profile = new Application($properties);
                 break;
             case Profile::GROUP:
-                $profile = new Group;
+                $profile = new Group($properties);
                 break;
             case Profile::EVENT:
-                $profile = new Event;
+                $profile = new Event($properties);
                 break;
             case Profile::PAGE:
-                $profile = new Page;
+                $profile = new Page($properties);
                 break;
             case Profile::USER:
             default:
-                $profile = new User;
+                $profile = new User($properties);
         }
 
         return $profile;

@@ -216,18 +216,33 @@ class Edge
     public function get()
     {
         $startNodeLabel = $this->start->getLabel();
-        $endNodeLabel   = $this->end->getLabel();
-        $relation       = $this->relation;
-        $startNodeId    = $this->start->id;
-        $direction      = $this->getDirection();
 
-        $queryString = "MATCH (start:{$startNodeLabel})"
-                       . ($direction === Edge::OUT ? '<' : '')
-                       . "-[relation:{$relation}]-"
-                       . ($direction === Edge::IN ? '>' : '')
-                       . "(end:{$endNodeLabel})
-                        WHERE start.id = \"{$startNodeId}\"
-                        RETURN relation, end";
+        $endNodeLabel = null;
+
+        // Particular case
+        if ( ! $this->end instanceof Profile) {
+            $endNodeLabel = $this->end->getLabel();
+        }
+
+        $relation    = $this->relation;
+        $startNodeId = $this->start->id;
+        $direction   = $this->getDirection();
+
+        $match = "MATCH (start:{$startNodeLabel})";
+        $match .= $direction === Edge::OUT ? '<' : '';
+        $match .= "-[relation:{$relation}]-";
+        $match .= $direction === Edge::IN ? '>' : '';
+
+        if ($endNodeLabel)
+            $match .= "(end:{$endNodeLabel})";
+        else
+            $match .= "(end)";
+
+        $segments   = [$match];
+        $segments[] = "WHERE start.id = \"{$startNodeId}\"";
+        $segments[] = "RETURN relation, end";
+
+        $queryString = implode(' ', $segments);
 
         $results = $this->getCypherQuery($queryString)->getResultSet();
 
@@ -250,6 +265,10 @@ class Edge
             /** @var Object $object */
             $object = new $class($properties);
             $object->setRelationship($relationship->getProperties());
+
+            // Particular case
+            if ($object instanceof Profile)
+                $object = $this->getClient()->newProfileFromData($object, $object->toArray());
 
             return $object;
         }

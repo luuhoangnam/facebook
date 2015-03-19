@@ -11,6 +11,7 @@ use Illuminate\Support\Collection;
  * @package Namest\Facebook
  *
  * @property Collection comments
+ * @property Profile    publisher
  * @property Page       page
  * @property string     message
  *
@@ -31,10 +32,14 @@ class Post extends Object
      *
      * @return EdgeOut
      */
-    public function publisher($profile)
+    public function publisher($profile = null)
     {
-        if ( ! (new $profile) instanceof Profile)
-            throw new \InvalidArgumentException("[{$profile}] class must be inheritance from Namest\\Facebook\\Profile");
+        if ( ! is_null($profile))
+            if ( ! (new $profile) instanceof Profile)
+                throw new \InvalidArgumentException("[{$profile}] class must be inheritance from Namest\\Facebook\\Profile");
+
+        if (is_null($profile))
+            $profile = Profile::class;
 
         return $this->belongsTo($profile, 'PUBLISHED', null, Edge::OUT);
     }
