@@ -88,20 +88,28 @@ class Comment extends Object
 
     /**
      * @param string $mesage New message
+     *
+     * @return bool
      */
     public function edit($mesage)
     {
-        $this->update(['message' => $mesage]);
+        return $this->update(['message' => $mesage]);
     }
 
+    /**
+     * @return bool
+     */
     public function hide()
     {
-        $this->update(['is_hidden' => true]);
+        return $this->update(['is_hidden' => true]);
     }
 
+    /**
+     * @return bool
+     */
     public function unhide()
     {
-        $this->update(['is_hidden' => false]);
+        return $this->update(['is_hidden' => false]);
     }
 
     /**
