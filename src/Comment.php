@@ -6,6 +6,7 @@ namespace Namest\Facebook;
  * Class Comment
  *
  * @property Profile owner
+ * @property Post    object
  * @property string  message
  *
  * @author  Nam Hoang Luu <nam@mbearvn.com>
@@ -46,6 +47,18 @@ class Comment extends Object
     public function comments()
     {
         return $this->hasMany(Comment::class, 'ON', 'comments', Edge::OUT);
+    }
+
+    /**
+     * @return EdgeOut
+     */
+    public function object()
+    {
+        $options = [
+            'cast' => Edge::SINGLE,
+        ];
+
+        return $this->belongsTo(Post::class, 'ON', false, Edge::IN, $options);
     }
 
     /**
