@@ -31,7 +31,7 @@ class Page extends Profile
      */
     public function posts()
     {
-        return $this->hasMany(Post::class, 'PUBLISHED', 'posts', Edge::IN);
+        return $this->hasMany(Post::class, 'ON', 'posts', Edge::OUT);
     }
 
     /**

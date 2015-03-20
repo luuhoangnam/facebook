@@ -47,14 +47,6 @@ class Post extends Object
     /**
      * @return EdgeOut
      */
-    public function page()
-    {
-        return $this->belongsTo(Page::class, 'PUBLISHED', false, Edge::OUT);
-    }
-
-    /**
-     * @return EdgeOut
-     */
     public function comments()
     {
         $options = [
