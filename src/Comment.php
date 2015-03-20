@@ -163,7 +163,7 @@ class Comment extends Object
             $properties[$key] = $value;
         }
 
-        if (array_key_exists('id', $properties))
+        if ( ! array_key_exists('id', $properties))
             throw new \LogicException("Can not fetch profile information for this comment if profile id does not appear");
 
         $profile->setId($properties['id'])->sync();
