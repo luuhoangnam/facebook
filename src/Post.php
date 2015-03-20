@@ -22,7 +22,7 @@ use Namest\Facebook\Traits\HasUpdatedTime;
  */
 class Post extends Object
 {
-    use HasComments, HasFromField, HasCreatedTime, HasUpdatedTime;
+    use HasComments, HasCreatedTime, HasUpdatedTime;
 
     protected $fields = [
         'id',
@@ -102,5 +102,22 @@ class Post extends Object
 
             $this->unsetEvent('saved');
         });
+    }
+
+    /**
+     * @param string $type
+     */
+    public function hydrateTypeField($type)
+    {
+        switch ($type) {
+            case 'photo':
+                $this->hydratePhotoTypePost();
+                break;
+        }
+    }
+
+    private function hydratePhotoTypePost()
+    {
+
     }
 }

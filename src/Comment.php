@@ -25,6 +25,7 @@ class Comment extends Object
         'id',
         'from',
         'message',
+        'attachment',
         'is_hidden',
         'can_hide',
         'can_like',
@@ -47,7 +48,7 @@ class Comment extends Object
     }
 
     /**
-     * @return EdgeOut
+     * @return EdgeIn
      */
     public function object()
     {
@@ -56,6 +57,14 @@ class Comment extends Object
         ];
 
         return $this->belongsTo(Post::class, 'ON', false, Edge::IN, $options);
+    }
+
+    /**
+     * @return EdgeOut
+     */
+    public function attachment()
+    {
+        return $this->hasOne(Photo::class, 'ATTACHED_TO', false, Edge::OUT);
     }
 
     /**
@@ -192,6 +201,28 @@ class Comment extends Object
             $comment->save();
 
             $this->parent()->save($comment);
+
+            $this->unsetEvent('saved');
+        });
+    }
+
+    /**
+     * @param \StdClass $data
+     */
+    public function hydrateAttachmentField($data)
+    {
+        // Temporarily
+        if ($data->type != 'photo')
+            return;
+
+        $photoID = $data->target->id;
+
+        $photo = new Photo;
+        $photo->setId($photoID);
+        $photo->sync();
+
+        $this->saved(function () use ($photo) {
+            $this->attachment()->save($photo);
 
             $this->unsetEvent('saved');
         });

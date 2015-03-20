@@ -39,4 +39,28 @@ class Photo extends Object
 
         return $this->belongsTo($profile, 'UPLOADED', null, Edge::OUT);
     }
+
+    /**
+     * @param array $images
+     */
+    public function setImagesAttribute($images)
+    {
+        if ( ! ($encodedString = json_encode($images)))
+            $encodedString = serialize($images);
+
+        $this->attributes['images'] = $encodedString;
+    }
+
+    /**
+     * @param string $encodedString
+     *
+     * @return array
+     */
+    public function getImagesAttribute($encodedString)
+    {
+        if ( ! ($images = json_decode($encodedString)))
+            $images = unserialize($encodedString);
+
+        return $images;
+    }
 }
