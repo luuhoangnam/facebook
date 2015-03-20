@@ -869,4 +869,21 @@ class Object implements ArrayAccess, Arrayable
 
         return $node->delete();
     }
+
+    /**
+     * @param string $profile
+     *
+     * @return string
+     */
+    protected function makeProfileFromClassName($profile = null)
+    {
+        if ( ! is_null($profile))
+            if ( ! (new $profile) instanceof Profile)
+                throw new \InvalidArgumentException("[{$profile}] class must be inheritance from Namest\\Facebook\\Profile");
+
+        if (is_null($profile))
+            $profile = Profile::class;
+
+        return $profile;
+    }
 }

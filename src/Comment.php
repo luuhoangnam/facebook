@@ -35,18 +35,13 @@ class Comment extends Object
     /**
      * Relation to profile who make this comment
      *
-     * @param string $profile Profile class
+     * @param string $type Profile class
      *
      * @return EdgeOut
      */
-    public function owner($profile = null)
+    public function owner($type = null)
     {
-        if ( ! is_null($profile))
-            if ( ! (new $profile) instanceof Profile)
-                throw new \InvalidArgumentException("[{$profile}] class must be inheritance from Namest\\Facebook\\Profile");
-
-        if (is_null($profile))
-            $profile = Profile::class;
+        $profile = $this->makeProfileFromClassName($type);
 
         return $this->belongsTo($profile, 'LEAVE', false, Edge::OUT);
     }
