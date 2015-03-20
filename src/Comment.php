@@ -164,13 +164,9 @@ class Comment extends Object
         $profile = $client->newProfileFromData($data);
 
         /** @var Profile $profile */
-        $properties = [];
-        foreach ((array) $data as $key => $value) {
-            if ($key === 'category_list')
-                continue;
-
-            $properties[$key] = $value;
-        }
+        $properties = array_filter((array) $data, function ($key) {
+            return ! in_array($key, ['category_list']);
+        }, ARRAY_FILTER_USE_KEY);
 
         if ( ! array_key_exists('id', $properties))
             throw new \LogicException("Can not fetch profile information for this comment if profile id does not appear");
