@@ -34,10 +34,14 @@ class Comment extends Object
      *
      * @return EdgeOut
      */
-    public function owner($profile)
+    public function owner($profile = null)
     {
-        if ( ! (new $profile) instanceof Profile)
-            throw new \InvalidArgumentException("[{$profile}] class must be inheritance from Namest\\Facebook\\Profile");
+        if ( ! is_null($profile))
+            if ( ! (new $profile) instanceof Profile)
+                throw new \InvalidArgumentException("[{$profile}] class must be inheritance from Namest\\Facebook\\Profile");
+
+        if (is_null($profile))
+            $profile = Profile::class;
 
         return $this->belongsTo($profile, 'LEAVE', false, Edge::OUT);
     }
