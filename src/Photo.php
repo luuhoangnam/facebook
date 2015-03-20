@@ -63,4 +63,32 @@ class Photo extends Object
 
         return $images;
     }
+
+    /**
+     * @param mixed $data
+     */
+    public function hydrateFromField($data)
+    {
+        $client  = $this->getClient();
+        $profile = $client->newProfileFromData($data);
+
+        /** @var Profile $profile */
+        /** @noinspection PhpUndefinedConstantInspection */
+        $properties = array_filter((array) $data, function ($key) {
+            return ! in_array($key, ['category_list']);
+        }, ARRAY_FILTER_USE_KEY);
+
+        if ( ! array_key_exists('id', $properties))
+            throw new \LogicException("Can not fetch profile information for this photo if profile id does not appear");
+
+        $profile = $profile->findOrSync($properties['id']);
+
+        $this->saved(function () use ($profile) {
+            // TODO Make edge relation
+            // (profile:Profile)-[:LEAVE]->(comment:Comment)-[:ON]->(post:Post)
+            $this->owner(get_class($profile))->save($profile);
+
+            $this->unsetEvent('saved');
+        });
+    }
 }
