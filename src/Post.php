@@ -85,15 +85,22 @@ class Post extends Object
      */
     public function hydrateFromField($data)
     {
-        if ( ! in_array('from', $this->fields) && ! array_key_exists('from', $this->fields))
-            throw new \LogicException("From fields must be provided");
-
         $client  = $this->getClient();
         $profile = $client->newProfileFromData($data);
 
         /** @var Profile $profile */
-        $attributes = (array) $data;
-        $profile    = $profile->fill($attributes)->sync();
+        /** @noinspection PhpUndefinedConstantInspection */
+        $properties = array_filter((array) $data, function ($key) {
+            return ! in_array($key, ['category_list']);
+        }, ARRAY_FILTER_USE_KEY);
+
+        if ( ! array_key_exists('id', $properties))
+            throw new \LogicException("Can not fetch profile information for this comment if profile id does not appear");
+
+        $profile->setId($properties['id']);
+
+        if (is_null($profile->get()))
+            $profile->sync();
 
         $this->saved(function () use ($profile) {
             // Make edge relation

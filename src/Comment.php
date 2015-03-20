@@ -164,6 +164,7 @@ class Comment extends Object
         $profile = $client->newProfileFromData($data);
 
         /** @var Profile $profile */
+        /** @noinspection PhpUndefinedConstantInspection */
         $properties = array_filter((array) $data, function ($key) {
             return ! in_array($key, ['category_list']);
         }, ARRAY_FILTER_USE_KEY);
@@ -171,7 +172,10 @@ class Comment extends Object
         if ( ! array_key_exists('id', $properties))
             throw new \LogicException("Can not fetch profile information for this comment if profile id does not appear");
 
-        $profile->setId($properties['id'])->sync();
+        $profile->setId($properties['id']);
+
+        if (is_null($profile->get()))
+            $profile->sync();
 
         $this->saved(function () use ($profile) {
             // TODO Make edge relation
@@ -215,7 +219,9 @@ class Comment extends Object
 
         $photo = new Photo;
         $photo->setId($photoID);
-        $photo->sync();
+
+        if (is_null($photo->get()))
+            $photo->sync();
 
         $this->saved(function () use ($photo) {
             $this->attachment()->save($photo);
