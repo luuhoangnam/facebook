@@ -49,11 +49,7 @@ class Post extends Object
      */
     public function page()
     {
-        $options = [
-            'cast' => Edge::SINGLE,
-        ];
-
-        return $this->belongsTo(Page::class, 'ON', false, Edge::IN, $options);
+        return $this->belongsTo(Page::class, 'ON', false, Edge::IN);
     }
 
     /**
