@@ -903,4 +903,31 @@ class Object implements ArrayAccess, Arrayable
 
         return $profile;
     }
+
+    /**
+     * @param string $id
+     *
+     * @return Object
+     */
+    public static function findOrSync($id)
+    {
+        $instance = new static(['id' => $id]);
+
+        if (is_null($instance->get()))
+            $instance->sync();
+
+        return $instance;
+    }
+
+    /**
+     * @param string $id
+     *
+     * @return Object|null
+     */
+    public static function find($id)
+    {
+        $instance = new static(['id' => $id]);
+
+        return $instance->get();
+    }
 }

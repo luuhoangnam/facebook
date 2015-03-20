@@ -102,8 +102,8 @@ class Receiver
             case 'add':
                 $postId = $value->parent_id;
 
-                $post    = (new Post(['id' => $postId]))->sync();
-                $comment = (new Comment(['id' => $commentId]))->sync();
+                $post    = Post::findOrSync($postId);
+                $comment = Comment::findOrSync($commentId);
 
                 $post->comments()->save($comment);
 
@@ -116,7 +116,7 @@ class Receiver
                 ]);
                 break;
             case 'edited':
-                $comment = (new Comment(['id' => $commentId]))->sync();
+                $comment = Comment::findOrSync($commentId);
 
                 $this->log->info('Comment has been edited', [
                     'comment' => $commentId,
@@ -126,8 +126,7 @@ class Receiver
                 $this->events->fire('facebook.comment.edited', [$commentId]);
                 break;
             case 'remove':
-                $comment = (new Comment(['id' => $commentId]))->get();
-                if (is_null($comment))
+                if ( ! ($comment = Comment::find($commentId)))
                     return;
 
                 $comment->deleteNode();
@@ -154,8 +153,8 @@ class Receiver
             case 'add':
                 $postId = $value->post_id;
 
-                $page = (new Page(['id' => $pageId]))->sync();
-                $post = (new Post(['id' => $postId]))->sync();
+                $page = Page::findOrSync($pageId);
+                $post = Post::findOrSync($postId);
 
                 $page->posts()->save($post);
 
@@ -183,7 +182,9 @@ class Receiver
             case 'remove':
                 $id = $value->post_id;
 
-                $post = new Post(['id' => $id]);
+                if ( ! ($post = Post::find($id)))
+                    return;
+
                 $post->deleteNode();
 
                 $this->events->fire('facebook.post.removed', [$id]);
