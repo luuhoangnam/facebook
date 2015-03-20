@@ -86,7 +86,7 @@ class Photo extends Object
         $this->saved(function () use ($profile) {
             // TODO Make edge relation
             // (profile:Profile)-[:LEAVE]->(comment:Comment)-[:ON]->(post:Post)
-            $this->owner(get_class($profile))->save($profile);
+            $this->uploader(get_class($profile))->save($profile);
 
             $this->unsetEvent('saved');
         });
