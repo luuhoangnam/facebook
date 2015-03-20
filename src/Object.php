@@ -88,6 +88,16 @@ class Object implements ArrayAccess, Arrayable
     public $synced = false;
 
     /**
+     * @var array
+     */
+    protected $visible = [];
+
+    /**
+     * @var array
+     */
+    protected $hidden = [];
+
+    /**
      * @param array $attributes
      */
     public function __construct($attributes = [])
@@ -435,10 +445,29 @@ class Object implements ArrayAccess, Arrayable
         if ( ! $this->exists)
             $this->get();
 
-        if (is_array($this->relationship))
-            return array_merge($this->attributes, $this->relationship);
+        $attributes = $this->attributesToArray();
 
-        return $this->attributes;
+        if (is_array($this->relationship))
+            return array_merge($attributes, $this->relationship);
+
+        return $attributes;
+    }
+
+    /**
+     * Convert the model's attributes to an array.
+     *
+     * @return array
+     */
+    public function attributesToArray()
+    {
+        $attributes = $this->attributes;
+
+        foreach ($attributes as $key => $value) {
+            if ($this->hasGetMutator($key))
+                $attributes[$key] = $this->mutateAttribute($key, $value);
+        }
+
+        return $attributes;
     }
 
     /**

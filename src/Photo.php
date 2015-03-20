@@ -45,10 +45,8 @@ class Photo extends Object
      */
     public function setImagesAttribute($images)
     {
-        if ( ! ($encodedString = json_encode($images)))
-            $encodedString = serialize($images);
-
-        $this->attributes['images'] = $encodedString;
+        // TODO Fix double encode
+        $this->attributes['images'] = json_encode($images);
     }
 
     /**
@@ -58,10 +56,8 @@ class Photo extends Object
      */
     public function getImagesAttribute($encodedString)
     {
-        if ( ! ($images = json_decode($encodedString)))
-            $images = unserialize($encodedString);
-
-        return $images;
+        // TODO Fix double encode
+        return json_decode(json_decode($encodedString));
     }
 
     /**
