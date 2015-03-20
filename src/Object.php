@@ -411,6 +411,23 @@ class Object implements ArrayAccess, Arrayable
     }
 
     /**
+     * @param string $object
+     * @param string $relation
+     * @param string $edge
+     * @param string $direction
+     * @param array  $options
+     *
+     * @return EdgeOut|EdgeIn
+     *
+     */
+    protected function hasOne($object, $relation, $edge = null, $direction = Edge::OUT, $options = [])
+    {
+        $options = ['cast' => Edge::SINGLE];
+
+        return $this->hasMany($object, $relation, $edge, $direction, $options);
+    }
+
+    /**
      * @return array
      */
     public function toArray()
