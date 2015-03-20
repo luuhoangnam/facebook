@@ -24,6 +24,7 @@ class Page extends Profile
         'username',
         'website',
         'phone',
+        'picture',
     ];
 
     /**

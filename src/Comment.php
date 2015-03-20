@@ -177,7 +177,10 @@ class Comment extends Object
             $properties[$key] = $value;
         }
 
-        $profile->fill($properties)->save();
+        if (array_key_exists('id', $properties))
+            throw new \LogicException("Can not fetch profile information for this comment if profile id does not appear");
+
+        $profile->setId($properties['id'])->sync();
 
         $this->saved(function () use ($profile) {
             // TODO Make edge relation
