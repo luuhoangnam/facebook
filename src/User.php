@@ -2,7 +2,11 @@
 
 namespace Namest\Facebook;
 
+use Carbon\Carbon;
 use Illuminate\Support\Collection;
+use Namest\Facebook\Traits\HasCreatedTime;
+use Namest\Facebook\Traits\HasPicture;
+use Namest\Facebook\Traits\HasUpdatedTime;
 
 /**
  * Class User
@@ -16,6 +20,7 @@ use Illuminate\Support\Collection;
  */
 class User extends Profile
 {
+    use HasUpdatedTime;
 
     protected $fields = [
         // Public fields
@@ -60,21 +65,5 @@ class User extends Profile
             'name',
             'id',
         ];
-    }
-
-    /**
-     * @param \StdClass $data
-     */
-    public function hydratePictureField($data)
-    {
-        $avatar = $data->data->url;
-
-        $this->saved(function () use ($avatar) {
-
-            $this->avatar = $avatar;
-            $this->save();
-
-            $this->unsetEvent('saved');
-        });
     }
 }

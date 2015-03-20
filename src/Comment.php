@@ -2,6 +2,9 @@
 
 namespace Namest\Facebook;
 
+use Namest\Facebook\Traits\HasComments;
+use Namest\Facebook\Traits\HasCreatedTime;
+
 /**
  * Class Comment
  *
@@ -16,6 +19,8 @@ namespace Namest\Facebook;
  */
 class Comment extends Object
 {
+    use HasComments, HasCreatedTime;
+
     protected $fields = [
         'id',
         'from',
@@ -49,14 +54,6 @@ class Comment extends Object
     /**
      * @return EdgeOut
      */
-    public function comments()
-    {
-        return $this->hasMany(Comment::class, 'ON', 'comments', Edge::OUT);
-    }
-
-    /**
-     * @return EdgeOut
-     */
     public function object()
     {
         $options = [
@@ -80,16 +77,6 @@ class Comment extends Object
     public function parent()
     {
         return $this->belongsTo(Comment::class, 'HAS_PARENT', null, Edge::IN);
-    }
-
-    /**
-     * @param string $message
-     *
-     * @return string|bool
-     */
-    public function comment($message)
-    {
-        return $this->comments()->publish(['message' => $message]);
     }
 
     /**

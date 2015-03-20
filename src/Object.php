@@ -117,10 +117,32 @@ class Object implements ArrayAccess, Arrayable
     /**
      * @param string $key
      * @param mixed  $value
+     *
+     * @return mixed
      */
     public function setAttribute($key, $value)
     {
+        if ($this->hasSetMutator($key)) {
+            $method = 'set' . studly_case($key) . 'Attribute';
+
+            return $this->{$method}($value);
+        }
+
         $this->attributes[$key] = $value;
+
+        return null;
+    }
+
+    /**
+     * Determine if a set mutator exists for an attribute.
+     *
+     * @param  string $key
+     *
+     * @return bool
+     */
+    public function hasSetMutator($key)
+    {
+        return method_exists($this, 'set' . studly_case($key) . 'Attribute');
     }
 
     /**
@@ -133,6 +155,10 @@ class Object implements ArrayAccess, Arrayable
         if (in_array($key, $this->required) && ! array_key_exists($key, $this->attributes))
             throw new \LogicException("[{$key}] is required to be set.");
 
+        if (array_key_exists($key, $this->attributes) || $this->hasGetMutator($key)) {
+            return $this->getAttributeValue($key);
+        }
+
         if (array_key_exists($key, $this->edges)) {
             return $this->edges[$key];
         }
@@ -142,6 +168,68 @@ class Object implements ArrayAccess, Arrayable
         }
 
         return $this->attributes[$key];
+    }
+
+    /**
+     * Determine if a get mutator exists for an attribute.
+     *
+     * @param  string $key
+     *
+     * @return bool
+     */
+    public function hasGetMutator($key)
+    {
+        return method_exists($this, 'get' . studly_case($key) . 'Attribute');
+    }
+
+    /**
+     * Get the value of an attribute using its mutator.
+     *
+     * @param  string $key
+     * @param  mixed  $value
+     *
+     * @return mixed
+     */
+    protected function mutateAttribute($key, $value)
+    {
+        return $this->{'get' . studly_case($key) . 'Attribute'}($value);
+    }
+
+    /**
+     * Get a plain attribute (not a relationship).
+     *
+     * @param  string $key
+     *
+     * @return mixed
+     */
+    protected function getAttributeValue($key)
+    {
+        $value = $this->getAttributeFromArray($key);
+
+        // If the attribute has a get mutator, we will call that then return what
+        // it returns as the value, which is useful for transforming values on
+        // retrieval from the model to a form that is more useful for usage.
+        if ($this->hasGetMutator($key)) {
+            return $this->mutateAttribute($key, $value);
+        }
+
+        return $value;
+    }
+
+    /**
+     * Get an attribute from the $attributes array.
+     *
+     * @param  string $key
+     *
+     * @return mixed
+     */
+    protected function getAttributeFromArray($key)
+    {
+        if (array_key_exists($key, $this->attributes)) {
+            return $this->attributes[$key];
+        }
+
+        return null;
     }
 
     /**

@@ -3,6 +3,10 @@
 namespace Namest\Facebook;
 
 use Illuminate\Support\Collection;
+use Namest\Facebook\Traits\HasComments;
+use Namest\Facebook\Traits\HasCreatedTime;
+use Namest\Facebook\Traits\HasFromField;
+use Namest\Facebook\Traits\HasUpdatedTime;
 
 /**
  * Class Post
@@ -18,6 +22,8 @@ use Illuminate\Support\Collection;
  */
 class Post extends Object
 {
+    use HasComments, HasFromField, HasCreatedTime, HasUpdatedTime;
+
     protected $fields = [
         'id',
         'from' => ['id', 'name', 'category'],
@@ -53,24 +59,6 @@ class Post extends Object
     }
 
     /**
-     * @return EdgeOut
-     */
-    public function comments()
-    {
-        return $this->hasMany(Comment::class, 'ON', 'comments', Edge::OUT);
-    }
-
-    /**
-     * @param string $message
-     *
-     * @return string
-     */
-    public function comment($message)
-    {
-        return $this->comments()->publish(['message' => $message]);
-    }
-
-    /**
      * @return array
      */
     public function getFetchCommentsParameters()
@@ -95,29 +83,5 @@ class Post extends Object
             'can_hide',
             'can_like',
         ];
-    }
-
-    /**
-     * @param mixed $data
-     */
-    public function hydrateFromField($data)
-    {
-        if ( ! in_array('from', $this->fields) && ! array_key_exists('from', $this->fields))
-            throw new \LogicException("From fields must be provided");
-
-        $client  = $this->getClient();
-        $profile = $client->newProfileFromData($data);
-
-        /** @var Profile $profile */
-        $attributes = (array) $data;
-        $profile    = $profile->fill($attributes)->sync();
-
-        $this->saved(function () use ($profile) {
-            // Make edge relation
-            // (profile:Profile)-[:PUBLISH]->(post:Post)-[:ON]->(page:Page)
-            $this->publisher(get_class($profile))->save($profile);
-
-            $this->unsetEvent('saved');
-        });
     }
 }
