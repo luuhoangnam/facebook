@@ -172,10 +172,7 @@ class Comment extends Object
         if ( ! array_key_exists('id', $properties))
             throw new \LogicException("Can not fetch profile information for this comment if profile id does not appear");
 
-        $profile->setId($properties['id']);
-
-        if (is_null($profile->get()))
-            $profile->sync();
+        $profile = $profile->findOrSync($properties['id']);
 
         $this->saved(function () use ($profile) {
             // TODO Make edge relation
@@ -217,11 +214,9 @@ class Comment extends Object
 
         $photoID = $data->target->id;
 
-        $photo = new Photo;
-        $photo->setId($photoID);
-
-        if (is_null($photo->get()))
-            $photo->sync();
+        /** @var Photo $photo */
+        if ( ! ($photo = Photo::findOrSync($photoID)))
+            return;
 
         $this->saved(function () use ($photo) {
             $this->attachment()->save($photo);
