@@ -78,6 +78,16 @@ class Object implements ArrayAccess, Arrayable
     protected $relationship;
 
     /**
+     * @var bool
+     */
+    public $exists = false;
+
+    /**
+     * @var bool
+     */
+    public $synced = false;
+
+    /**
      * @param array $attributes
      */
     public function __construct($attributes = [])
@@ -148,6 +158,8 @@ class Object implements ArrayAccess, Arrayable
 
         $this->fill($properties);
 
+        $this->exists = true;
+
         return $this;
     }
 
@@ -167,6 +179,8 @@ class Object implements ArrayAccess, Arrayable
 
         // Save
         $this->save();
+
+        $this->synced = true;
 
         return $this;
     }
@@ -313,6 +327,9 @@ class Object implements ArrayAccess, Arrayable
      */
     public function toArray()
     {
+        if ( ! $this->exists)
+            $this->get();
+
         if (is_array($this->relationship))
             return array_merge($this->attributes, $this->relationship);
 
