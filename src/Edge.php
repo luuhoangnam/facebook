@@ -31,7 +31,7 @@ class Edge
     protected $direction;
 
     /**
-     * @var Object
+     * @var \Namest\Facebook\Object
      */
     protected $start;
 
@@ -41,7 +41,7 @@ class Edge
     protected $relation;
 
     /**
-     * @var Object
+     * @var \Namest\Facebook\Object
      */
     protected $end;
 
@@ -61,9 +61,9 @@ class Edge
     protected $client;
 
     /**
-     * @param Object $start
+     * @param \Namest\Facebook\Object $start
      * @param string $relation
-     * @param Object $end
+     * @param \Namest\Facebook\Object $end
      * @param string $edge
      * @param array  $options
      *
@@ -211,7 +211,7 @@ class Edge
     }
 
     /**
-     * @return array|Object
+     * @return array|\Namest\Facebook\Object
      */
     public function get()
     {
@@ -262,7 +262,7 @@ class Edge
 
             $properties = $node->getProperties();
 
-            /** @var Object $object */
+            /** @var \Namest\Facebook\Object $object */
             $object = new $class($properties);
             $object->setRelationship($relationship->getProperties());
 
@@ -284,7 +284,7 @@ class Edge
 
             $endClass = get_class($this->end);
 
-            /** @var Object $object */
+            /** @var \Namest\Facebook\Object $object */
             $object = new $endClass($properties);
             $object->setRelationship($relationship->getProperties());
 
@@ -349,7 +349,7 @@ class Edge
     /**
      * Save the end node
      *
-     * @param $object
+     * @param \Namest\Facebook\Object $object
      *
      * @throws Exception
      * @throws \Everyman\Neo4j\Exception

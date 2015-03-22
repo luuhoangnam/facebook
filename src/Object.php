@@ -951,7 +951,7 @@ class Object implements ArrayAccess, Arrayable
     /**
      * @param string $id
      *
-     * @return Object|null
+     * @return \Namest\Facebook\Object|null
      */
     public static function find($id)
     {
