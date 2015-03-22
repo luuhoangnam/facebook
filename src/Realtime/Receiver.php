@@ -102,7 +102,8 @@ class Receiver
             case 'add':
                 $postId = $value->parent_id;
 
-                $post    = Post::findOrSync($postId);
+                /** @var Post $post */
+                $post    = Post::find($postId)->sync();
                 $comment = Comment::findOrSync($commentId);
 
                 $post->comments()->save($comment);
@@ -153,7 +154,9 @@ class Receiver
             case 'add':
                 $postId = $value->post_id;
 
-                $page = Page::findOrSync($pageId);
+                /** @var Page $page */
+                $page = Page::find($pageId)->sync();
+                /** @var Post $post */
                 $post = Post::findOrSync($postId);
 
                 $page->posts()->save($post);
